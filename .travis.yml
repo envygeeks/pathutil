@@ -1,0 +1,35 @@
+---
+cache: bundler
+sudo: false
+os:
+- linux
+rvm:
+- 2.1.8
+- 2.2.4
+- 2.3.0
+- jruby-9.0.4.0
+matrix:
+  allow_failures:
+  - rvm: jruby-9.0.4.0
+notifications:
+  email:
+  - jordon@envygeeks.io
+branches:
+  only:
+  - master
+addons:
+    code_climate:
+        repo_token:
+          secure: "\
+            zH3HYlJyPt7mysRcFhp1dekTHpGd+gHn/ybQ1almZyCE1NrmBBQXnk4zr/6nF496/Z\
+            H1Zzm/L1rS9w65UuwA7FJa+CSBfOVowyp7J3QFM+mhn6Ps/S2kuQs7ChbBdgf+gEgi\
+            8Zd0HGoRqGlZKCF5rH3q97PSmctJlZ2CLlS0NP106Vpm17NkKKFK+9SCXjszfBlvJG\
+            L3Y2EVi/6fvizi5hACHYTj08dHDUaf+aC93+xrACoNkn7/BnRt/NINvnSvar11AyXn\
+            mYnRIIlNnLeE6KeSlJIFMz1ItMSoKKjjuz/ff7OrBtI0+zpfAGVB+ZxoA/yYCI4XE5\
+            7scOCVR3lcVqn1E9mZX2TgZXNEIZRxD2v46NIT9eetct5egkVeCiUvScgbnzB/Qt8H\
+            gwsNhd2b4NDdeVsR5cnf2F3Z2LwzSILKHe7wVeD/qhCn1KhAnqi4aD7d+/7CHwv83U\
+            Aa5jmDaJ65ajQ6th0E99VJgvoIVlbc9MyxHNX9DFKZdhFs9AAv/BGcFwjXpiF31zJi\
+            m41PuO7imgUhxo5jzztJbJrsDFK4CRZ6P4YvqAd9qP+46HuNSvoTK/Ls8YO9NDzEzy\
+            BW3RrNdoyLJU3PDgpYZru/Q01YgBwB8ZbaJQB3VMf6JtWmxNDtZkrRJ5GbKRwXNkNu\
+            4IQ+nnBbPbKZxP8V0sW2ag4=\
+          "

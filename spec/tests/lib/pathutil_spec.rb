@@ -17,7 +17,7 @@ describe Pathutil do
 
   let :file do
     described_class.new(
-      Tempfile.new.to_path
+      Tempfile.new("spec").to_path
     )
   end
 
@@ -936,7 +936,7 @@ describe Pathutil do
 
       let :tmpfile1 do
         described_class.new(
-          Tempfile.new.to_path
+          Tempfile.new("spec").to_path
         )
       end
 

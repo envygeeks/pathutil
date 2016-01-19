@@ -8,6 +8,7 @@ gemspec
 
 group :test do
   gem "codeclimate-test-reporter", :require => false
+  gem "safe_yaml", :require => false
 end
 
 group :development do

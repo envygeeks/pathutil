@@ -89,10 +89,36 @@ describe Pathutil do
         )
       end
 
-      it "should reject any special classes" do
+      it "should reject any special classes", :disable => :oldest_ruby do
         expect { file.read_yaml }.to raise_error(
           Psych::DisallowedClass
         )
+      end
+
+      context "when using safe_yaml" do
+        before do
+          allow(file).to receive(:warn).and_return nil
+          allow(YAML).to receive(:respond_to?).with(:safe_load).and_return(false)
+          file.write(":hello: :world")
+        end
+
+        context do
+          specify do
+            expect(file).to receive(:warn) do
+              nil
+            end
+          end
+
+          after do
+            file.read_yaml
+          end
+        end
+
+        specify do
+          expect(file.read_yaml).to eq({
+            ":hello"=>":world"
+          })
+        end
       end
     end
 

@@ -59,7 +59,7 @@ class Pathutil
 
   # --------------------------------------------------------------------------
 
-  def read_yaml(safe: true, whitelist_classes: [], whitelist_symbols: [], throw_missing: false)
+  def read_yaml(safe: true, whitelist_classes: [], throw_missing: false)
     require "yaml"
 
     unless safe
@@ -69,15 +69,14 @@ class Pathutil
     end
 
     if !YAML.respond_to?(:safe_load)
-      require "safe_yaml/load"
-      warn "whitelist_classes in #{name}##{__method__} ignored with SafeYAML" unless whitelist_classes.empty?
-      warn "whitelist_symbols in #{name}##{__method__} ignored with SafeYAML" unless whitelist_symbols.empty?
-      SafeYAML.load(read)
+      setup_safe_yaml whitelist_classes
+      SafeYAML.load(read, {
+        :raise_on_unknown_tag => true
+      })
 
     else
       YAML.safe_load(read, {
-        :whitelist_classes => whitelist_classes,
-        :whitelist_symbols => whitelist_symbols
+        :whitelist_classes => whitelist_classes
       })
     end
   rescue Errno::ENOENT
@@ -614,6 +613,7 @@ class Pathutil
 
   # --------------------------------------------------------------------------
 
+  private
   def safe_copy_file(to, root: nil)
     raise Errno::EPERM, "#{self} not in #{root}" unless in_path?(root)
     FileUtils.cp(self, to, {
@@ -651,6 +651,19 @@ class Pathutil
         end
       end
     end
+  end
+
+  # --------------------------------------------------------------------------
+
+  private
+  def setup_safe_yaml(whitelist_classes)
+    warn "WARN: SafeYAML will be removed when Ruby 2.0 goes EOL."
+    require "safe_yaml/load"
+
+    SafeYAML.restore_defaults!
+    whitelist_classes.map(&SafeYAML.method(
+      :whitelist_class!
+    ))
   end
 
   # --------------------------------------------------------------------------

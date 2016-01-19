@@ -10,12 +10,12 @@
 [coverage]: https://codeclimate.com/github/envygeeks/pathutil/coverage
 [travis]: https://travis-ci.org/envygeeks/pathutil
 
-`Pathutil` tries to be a faster pure `ruby` impelementation of `Pathname`.  It
-arose out of a need to fix basic problems with `Pathname`, such as suscepetibility
-to `Pathname.new("/tmp").join("/lol") => <Pathname:/lol>`, need for automatic encoding
-and normalization (for stuff like Jekyll) and the ability to do other safe-style
-operations in an encapsulated format, like copying files and folders with
-symlinks but only if they originate from the given root.
+Pathutil tries to be a faster pure Ruby impelementation of Pathname.  It
+arose out of a need to fix basic problems with Pathname, such as suscepetibility
+to join overrides, need for automatic encoding, and normalization (for stuff
+like Jekyll) and the ability to do other safe-style operations in an
+encapsulated format, like copying files and folders with symlinks
+but only if they originate from the given root.
 
 ## Current (All) Methods
 
@@ -23,16 +23,16 @@ symlinks but only if they originate from the given root.
 
 ### Diverging (or New/Extra) Methods
 
-- `encoding`, `encoding=`: Set the read/write encoding.
-- `!~`, `=~`: Regexp operations on the path, behaves normally.
-- `>=`, `>`: Check if a file is in but ahead of a path: `Pathutil.new("/tmp/hello") > "/tmp" # => true`
-- `in_path?`: Check if a file is within a given path: `Pathutil.new("/tmp/hello").in_path?("/tmp") # => true`
-- `<=`, `<`: Check if a file is in but below a path: `Pathutil.new("/tmp") < "/tmp/hello" # => true`
-- `read_yaml`: a wrapper around `Yaml.safe_load` and `SafeYAML` to make reading `YAML` easy.
-- `children`: behaves like Pathname, except it accepts a block to work on the path.
-- `safe_copy`: Copy files, disallowing symlinks unless `in_path?`
-- `enforce_root`: Force a root if not already in that root.
-- `normalize`: CRLF => LF (read), LF => CRLF (write).
-- `read_yaml`: Read YAML with or without safe.
+- `encoding`, `encoding=` - Set the read/write encoding.
+- `normalize` - `crlf` => `lf` (read), `lf` => `crlf` (write).
+- `!~`, `=~` - Regexp operations on the path, behaves normally.
+- `>=`, `>` - Check if a file is in but ahead of a path: `Pathutil.new("/tmp/hello") > "/tmp" # => true`
+- `in_path?` - Check if a file is within a given path: `Pathutil.new("/tmp/hello").in_path?("/tmp") # => true`
+- `<=`, `<` - Check if a file is in but below a path: `Pathutil.new("/tmp") < "/tmp/hello" # => true`
+- `read_yaml` - a wrapper around `Yaml.safe_load` and `SafeYAML` to make reading `YAML` easy.
+- `children` - behaves like Pathname, except it accepts a block to work on the path.
+- `safe_copy` - Copy files, disallowing symlinks unless `in_path?`
+- `enforce_root` - Force a root if not already in that root.
+- `read_yaml` - Read YAML with or without safe.
 
 `touch`, `rm_r`, `link`, `symlink`, `cp_r`, `rm`, `cp`, `rm_rf`, `first` (alias of `dirname`), `shellescape`, `to_regexp`, `chdir`, `glob` (does `chdir` first), `gsub` (works on `@path`), `chomp` (works on `@path`), `mkdir_p`, `to_str` (alias of `to_s`), `to_a` (alias of `children`), `regexp_escape`, `last` (alias of `basename`), `to_pathname`, `split_path`, `read_json`

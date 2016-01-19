@@ -397,9 +397,9 @@ class Pathutil
   # @see Find.find
   # --------------------------------------------------------------------------
 
-  def find(ignore_error: true)
+  def find
     return to_enum(__method__) unless block_given?
-    Find.find @path, :ignore_error => ignore_error do |val|
+    Find.find @path do |val|
       yield self.class.new(val)
     end
   end

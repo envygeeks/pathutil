@@ -1,5 +1,15 @@
 # Pathutil
 
+[![Build Status](https://travis-ci.org/envygeeks/pathutil.svg?branch=master)][travis]
+[![Test Coverage](https://codeclimate.com/github/envygeeks/pathutil/badges/coverage.svg)][coverage]
+[![Code Climate](https://codeclimate.com/github/envygeeks/pathutil/badges/gpa.svg)][codeclimate]
+[![Dependency Status](https://gemnasium.com/envygeeks/pathutil.svg)][gemnasium]
+
+[gemnasium]: https://gemnasium.com/envygeeks/pathutil
+[codeclimate]: https://codeclimate.com/github/envygeeks/pathutil
+[coverage]: https://codeclimate.com/github/envygeeks/pathutil/coverage
+[travis]: https://travis-ci.org/envygeeks/pathutil
+
 `Pathutil` tries to be a faster pure `ruby` impelementation of `Pathname`.  It
 arose out of a need to fix basic problems with `Pathname`, such as suscepetibility
 to `Pathname.new("/tmp").join("/lol") => <Pathname:/lol>`, need for automatic encoding

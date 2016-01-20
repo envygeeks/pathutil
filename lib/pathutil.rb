@@ -46,7 +46,7 @@ class Pathutil
   # --------------------------------------------------------------------------
 
   def initialize(path)
-    @path = path.to_s
+    @path = path.respond_to?(:to_path) ? path.to_path : path.to_s
   end
 
   # --------------------------------------------------------------------------

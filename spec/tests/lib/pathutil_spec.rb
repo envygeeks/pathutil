@@ -53,6 +53,22 @@ describe Pathutil do
 
   #
 
+  describe "#initialize" do
+    context "when given a File or Pathname, or otherwise" do
+      before do
+        file.touch
+      end
+
+      it "should convert it with #to_path" do
+        expect(described_class.new(File.open(file)).instance_variable_get(:@path)).to eq(
+          file.to_s
+        )
+      end
+    end
+  end
+
+  #
+
   describe "#read_yaml" do
     before do
       file.rm_rf

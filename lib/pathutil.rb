@@ -741,6 +741,7 @@ class Pathutil
 
   rb_delegate :rm_rf,   :to => :FileUtils, :args => :@path
   rb_delegate :rm_r,    :to => :FileUtils, :args => :@path
+  rb_delegate :rm_f,    :to => :FileUtils, :args => :@path
   rb_delegate :rm,      :to => :FileUtils, :args => :@path
   rb_delegate :cp_r,    :to => :FileUtils, :args => :@path
   rb_delegate :touch,   :to => :FileUtils, :args => :@path

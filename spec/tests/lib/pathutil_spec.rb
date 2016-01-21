@@ -71,6 +71,41 @@ describe Pathutil do
 
   #
 
+  describe "#search_backwards" do
+    let :path do
+      file.rm_rf
+      file.join(
+        "hello/world/hello/hello"
+      )
+    end
+
+    #
+
+    before do
+      path.mkdir_p
+    end
+
+    #
+
+    it "should return all results it finds" do
+      expect(path.search_backwards("hello").size).to eq(
+        3
+      )
+    end
+
+    #
+
+    context "backwards: n" do
+      it "should only step back that many times" do
+        expect { |b| path.search_backwards("hello", :backwards => 2, &b) }.to(
+          yield_control.twice
+        )
+      end
+    end
+  end
+
+  #
+
   describe "#read_yaml" do
     before do
       file.rm_rf

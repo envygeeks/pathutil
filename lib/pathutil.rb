@@ -58,6 +58,47 @@ class Pathutil
   end
 
   # --------------------------------------------------------------------------
+  # Search backwards for a file (like Rakefile, _config.yml, opts.yml).
+  # @note It will return all results that it finds across all ascending paths.
+  # @param backwards how far do you wish to search backwards in that path?
+  # @param file the file you are searching for.
+  #
+  # @example
+  #   Pathutil.new("~/").expand_path.search_backwards(".bashrc") => [
+  #     #<Pathutil:/home/user/.bashrc>
+  #   ]
+  # --------------------------------------------------------------------------
+
+  def search_backwards(file, backwards: Float::INFINITY)
+    ary = []
+
+    ascend.with_index(1).each do |path, index|
+      if index > backwards
+        break
+
+      else
+        Dir.chdir path do
+          if block_given?
+            file = self.class.new(file)
+            if yield(file)
+              ary.push(
+                self
+              )
+            end
+
+          elsif File.exist?(file)
+            ary.push(self.class.new(
+              path.join(file)
+            ))
+          end
+        end
+      end
+    end
+
+    ary
+  end
+
+  # --------------------------------------------------------------------------
 
   def read_yaml(safe: true, whitelist_classes: [], throw_missing: false)
     require "yaml"

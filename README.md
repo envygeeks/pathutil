@@ -22,6 +22,7 @@ but only if they originate from the given root.
 - `encoding`, `encoding=` - Set the read/write encoding.
 - `normalize` - `crlf` => `lf` (read), `lf` => `crlf` (write).
 - `!~`, `=~` - Regexp operations on the path, behaves normally.
+- `search_backwards` - Allows you to search backwards for a file or folder.
 - `>=`, `>` - Check if a file is in but ahead of a path: `Pathutil.new("/tmp/hello") > "/tmp" # => true`
 - `in_path?` - Check if a file is within a given path: `Pathutil.new("/tmp/hello").in_path?("/tmp") # => true`
 - `<=`, `<` - Check if a file is in but below a path: `Pathutil.new("/tmp") < "/tmp/hello" # => true`

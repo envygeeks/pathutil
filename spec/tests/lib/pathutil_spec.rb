@@ -5,6 +5,8 @@
 # ----------------------------------------------------------------------------
 
 require "rspec/helper"
+require "tempfile"
+
 describe Pathutil do
   (Pathname.instance_methods - Object.instance_methods).each do |method|
     unless method == :cleanpath

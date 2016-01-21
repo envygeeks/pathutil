@@ -267,7 +267,7 @@ describe Pathutil do
     #
 
     specify do
-      expect(subject === subject.to_pathname).to eq(
+      expect(subject === Pathname.new(subject)).to eq(
         false
       )
     end
@@ -293,7 +293,7 @@ describe Pathutil do
     #
 
     specify do
-      expect(subject == subject.to_pathname).to eq(
+      expect(subject == Pathname.new(subject)).to eq(
         false
       )
     end
@@ -667,7 +667,7 @@ describe Pathutil do
 
   describe "#children" do
     specify do
-      other = subject.to_pathname.children.sort.map(&:to_s)
+      other = Pathname.new(subject).children.sort.map(&:to_s)
       expect(subject.children.sort.map(&:to_s)).to eq(
         other
       )
@@ -766,7 +766,7 @@ describe Pathutil do
 
     specify do
       expect(subject.find.to_a.map(&:to_s).sort).to eq(
-        subject.to_pathname.find.to_a.map(&:to_s).sort
+        Pathname.new(subject).find.to_a.map(&:to_s).sort
       )
     end
   end

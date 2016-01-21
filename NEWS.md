@@ -7,6 +7,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 #### Added/Changed
 - Make sure `Tempfile` is available for the specs.
 - Add `search_backwards` method to find all files ascendingly.
+- Remove `to_pathname` it serves no purpose.
 - Superficially drop support for 2.0.0.
 
 ## 0.2.0

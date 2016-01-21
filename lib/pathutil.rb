@@ -50,14 +50,6 @@ class Pathutil
   end
 
   # --------------------------------------------------------------------------
-
-  def to_pathname
-    Pathname.new(
-      self
-    )
-  end
-
-  # --------------------------------------------------------------------------
   # Search backwards for a file (like Rakefile, _config.yml, opts.yml).
   # @note It will return all results that it finds across all ascending paths.
   # @param backwards how far do you wish to search backwards in that path?

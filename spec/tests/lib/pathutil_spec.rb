@@ -150,9 +150,10 @@ describe Pathutil do
 
       context "when using safe_yaml" do
         before do
-          allow(file).to receive(:warn).and_return nil
           allow(YAML).to receive(:respond_to?).with(:safe_load).and_return(false)
-          file.write(":hello: :world")
+          allow(file).to receive(:warn).and_return(
+            nil
+          )
         end
 
         context do

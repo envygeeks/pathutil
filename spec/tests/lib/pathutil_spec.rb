@@ -1247,6 +1247,8 @@ describe Pathutil do
     end
   end
 
+  #
+
   describe ".make_tmpname" do
     let :result do
       described_class.make_tmpname(

@@ -1246,4 +1246,38 @@ describe Pathutil do
       end
     end
   end
+
+  describe ".make_tmpname" do
+    let :result do
+      described_class.make_tmpname(
+        "hello", "world"
+      )
+    end
+
+    #
+
+    specify do
+      expect(result).to match(
+        %r!/hello-!
+      )
+    end
+
+    #
+
+    specify do
+      expect(result).to end_with(
+        "-world"
+      )
+    end
+
+    #
+
+    context "when a user sends no prefix or suffix" do
+      specify do
+        expect { described_class.make_tmpname }.not_to(
+          raise_error
+        )
+      end
+    end
+  end
 end

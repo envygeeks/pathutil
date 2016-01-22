@@ -708,7 +708,9 @@ class Pathutil
 
     # ------------------------------------------------------------------------
 
-    def make_tmpname(prefix, suffix)
+    def make_tmpname(prefix = "", suffix = nil)
+      prefix = prefix.gsub(/\-\Z/, "") + "-" unless prefix.empty?
+
       File.join(
         Dir::Tmpname.tmpdir,
         Dir::Tmpname.make_tmpname(

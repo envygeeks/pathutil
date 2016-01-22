@@ -10,16 +10,27 @@ require "tempfile"
 describe Pathutil do
   (Pathname.instance_methods - Object.instance_methods).each do |method|
     unless method == :cleanpath
-      specify { expect(described_class).to \
-        have_method method }
+      specify do
+        expect(described_class).to have_method(
+          method
+        )
+      end
     end
+  end
+
+  #
+
+  let :tempfile do
+    Tempfile.new(
+      "spec"
+    )
   end
 
   #
 
   let :file do
     described_class.new(
-      Tempfile.new("spec").to_path
+      tempfile
     )
   end
 
@@ -158,9 +169,9 @@ describe Pathutil do
 
         context do
           specify do
-            expect(file).to receive(:warn) do
+            expect(file).to receive(:warn).and_return(
               nil
-            end
+            )
           end
 
           after do

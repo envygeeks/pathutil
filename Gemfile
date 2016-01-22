@@ -14,6 +14,7 @@ end
 group :development do
   gem "rspec", :require => false
   gem "rspec-helpers", :require => false
+  gem "luna-rubocop-formatters", :require => false
   gem "rubocop", :github => "bbatsov/rubocop", :require => false
   gem "luna-rspec-formatters", :require => false
   gem "benchmark-ips", :require => false

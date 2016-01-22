@@ -9,12 +9,12 @@ require "tempfile"
 
 describe Pathutil do
   (Pathname.instance_methods - Object.instance_methods).each do |method|
-    unless method == :cleanpath
-      specify do
-        expect(described_class).to have_method(
-          method
-        )
-      end
+    next if method == :cleanpath
+
+    specify do
+      expect(described_class).to have_method(
+        method
+      )
     end
   end
 
@@ -313,10 +313,9 @@ describe Pathutil do
     end
   end
 
-  #
-
   describe "#===" do
     specify do
+      # rubocop:disable Style/CaseEquality
       expect(subject === subject.basename).to eq(
         false
       )
@@ -333,6 +332,7 @@ describe Pathutil do
     #
 
     specify do
+      # rubocop:disable Lint/UselessComparison
       expect(subject === subject).to eq(
         true
       )
@@ -870,7 +870,7 @@ describe Pathutil do
   describe "#sub_ext" do
     specify do
       expect(subject.sub_ext(".rb").to_s).to eq(
-        "#{subject.to_s}.rb"
+        "#{subject}.rb"
       )
     end
 
@@ -923,9 +923,9 @@ describe Pathutil do
 
   describe "#read" do
     specify do
-      expect(file.read).to eq(
-        File.read file
-      )
+      expect(file.read).to eq(File.read(
+        file
+      ))
     end
 
     #
@@ -1211,7 +1211,8 @@ describe Pathutil do
             end
           end
 
-          #
+          # rubocop:disable Style/MultilineMethodCallIndentation
+          # rubocop:disable Style/FirstParameterIndentation
 
           context "when embedded deeply" do
             before do

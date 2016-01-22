@@ -22,6 +22,7 @@ Style/IndentArray: { EnforcedStyle: consistent }
 Style/ExtraSpacing: { AllowForAlignment: true }
 Style/Alias: { EnforcedStyle: prefer_alias }
 
+
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     '%q': '{}'
@@ -32,6 +33,7 @@ Style/PercentLiteralDelimiters:
     '%W': '()'
     '%x': '()'
 
+Style/MutableConstant:                { Enabled: false }
 Style/HashSyntax:                     { Enabled: false }
 Style/AlignArray:                     { Enabled: false }
 Style/StringLiterals:                 { Enabled: false }
@@ -59,29 +61,3 @@ Lint/UnusedMethodArgument:            { Enabled: false }
 
 AllCops:
   TargetRubyVersion: 2.0
-  Include:
-    - lib/**/*.rb
-
-  Exclude:
-    - .rubocop.yml
-    - .codeclimate.yml
-    - .travis.yml
-    - .gitignore
-    - .rspec
-
-    - Gemfile.lock
-    - CHANGELOG.md
-    - readme.md
-    - README.md
-    - Readme.md
-    - ReadMe.md
-    - COPYING
-    - LICENSE
-    - NEWS
-
-    - test/**/*
-    - vendor/**/*
-    - features/**/*
-    - benchmark/**/*
-    - script/**/*
-    - spec/**/*

@@ -60,7 +60,7 @@ class BenchmarkTask
 
   private
   def run(file)
-    _, err, _ = command "bundle", "exec", "ruby", file
+    _, err, = command "bundle", "exec", "ruby", file
     json = JSON.load(File.read("benchmark.json")).max_by do |val|
       val["ips"]
     end

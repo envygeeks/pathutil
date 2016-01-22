@@ -1,29 +1,3 @@
 engines:
   rubocop: { enabled: true  }
   fixme:   { enabled: false }
-exclude_paths:
-- .rubocop.yml
-- .codeclimate.yml
-- .travis.yml
-- .gitignore
-- .rspec
-
-- Gemfile.lock
-- CHANGELOG.md
-- readme.md
-- README.md
-- Readme.md
-- ReadMe.md
-- COPYING
-- LICENSE
-- NEWS
-
-- test/**/*
-- vendor/**/*
-- benchmark/**/*
-- features/**/*
-- script/**/*
-- spec/**/*
-ratings:
-  paths:
-  - lib/**/*.rb

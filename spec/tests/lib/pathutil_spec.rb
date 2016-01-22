@@ -20,21 +20,10 @@ describe Pathutil do
 
   #
 
-  let :tempfile do
-    File.join(
-      Dir::Tmpname.tmpdir,
-      Dir::Tmpname.make_tmpname(
-        "pathutil", "spec"
-      )
-    )
-  end
-
-  #
-
   let :file do
-    described_class.new(
-      tempfile
-    )
+    described_class.new(described_class.make_tmpname(
+      "pathutil", "spec"
+    ))
   end
 
   #

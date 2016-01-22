@@ -22,7 +22,6 @@ Style/IndentArray: { EnforcedStyle: consistent }
 Style/ExtraSpacing: { AllowForAlignment: true }
 Style/Alias: { EnforcedStyle: prefer_alias }
 
-
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     '%q': '{}'

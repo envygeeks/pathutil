@@ -257,7 +257,12 @@ class Pathutil
   # --------------------------------------------------------------------------
 
   def descend
-    return ascend.to_a.reverse.to_enum unless block_given?
+    unless block_given?
+      return to_enum(
+        __method__
+      )
+    end
+
     ascend.to_a.reverse_each do |val|
       yield val
     end

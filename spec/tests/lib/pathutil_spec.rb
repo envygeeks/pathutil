@@ -177,6 +177,60 @@ describe Pathutil do
 
     #
 
+    context "whitelisting classes" do
+      before do
+        file.write(
+          ":hello: :world"
+        )
+      end
+
+      #
+
+      specify do
+        expect(file.read_yaml(:whitelist_classes => [Symbol])).to eq({
+          :hello => :world
+        })
+      end
+    end
+
+    #
+
+    context "diallowing aliases" do
+      before do
+        file.write(
+          "version: &version 1\nother_version: *version"
+        )
+      end
+
+      #
+
+      specify do
+        expect { file.read_yaml(:aliases => false) }.to raise_error(
+          Psych::BadAlias
+        )
+      end
+    end
+
+    #
+
+    context do
+      before do
+        file.write(
+          "version: &version 1\nother_version: *version"
+        )
+      end
+
+      #
+
+      it "should allow aliases by default" do
+        expect(file.read_yaml).to eq({
+          "version" => 1, "other_version" => 1
+        })
+      end
+    end
+
+    #
+
     context do
       before do
         file.write(
@@ -217,7 +271,7 @@ describe Pathutil do
 
       context "and the user sets throw_missing" do
         specify do
-          expect { file.read_json(throw_missing: true) }.to raise_error(
+          expect { file.read_json(:throw_missing => true) }.to raise_error(
             Errno::ENOENT
           )
         end

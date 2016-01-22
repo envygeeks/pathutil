@@ -92,7 +92,7 @@ class Pathutil
 
   # --------------------------------------------------------------------------
 
-  def read_yaml(safe: true, whitelist_classes: [], throw_missing: false)
+  def read_yaml(safe: true, whitelist_classes: [], whitelist_symbols: [], throw_missing: false, aliases: true)
     require "yaml"
 
     unless safe
@@ -108,9 +108,12 @@ class Pathutil
       })
 
     else
-      YAML.safe_load(read, {
-        :whitelist_classes => whitelist_classes
-      })
+      YAML.safe_load(
+        read,
+        whitelist_classes,
+        whitelist_symbols,
+        aliases
+      )
     end
   rescue Errno::ENOENT
     throw_missing ? raise : (

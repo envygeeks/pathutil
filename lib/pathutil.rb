@@ -103,9 +103,9 @@ class Pathutil
 
     if !YAML.respond_to?(:safe_load)
       setup_safe_yaml whitelist_classes
-      SafeYAML.load(read, {
-        :raise_on_unknown_tag => true
-      })
+      SafeYAML.load(
+        read
+      )
 
     else
       YAML.safe_load(

@@ -5,7 +5,7 @@
 # ----------------------------------------------------------------------------
 
 require "rspec/helper"
-require "tempfile"
+require "yaml"
 
 describe Pathutil do
   (Pathname.instance_methods - Object.instance_methods).each do |method|
@@ -154,20 +154,34 @@ describe Pathutil do
       context "when using safe_yaml" do
         before do
           allow(YAML).to receive(:respond_to?).with(:safe_load).and_return(false)
-          allow(file).to receive(:warn).and_return(
+          allow(described_class).to receive(:warn).and_return(
             nil
           )
         end
 
         context do
           specify do
-            expect(file).to receive(:warn).and_return(
+            expect(described_class).to receive(:warn).and_return(
               nil
             )
           end
 
           after do
             file.read_yaml
+          end
+        end
+
+        context "when trying to disable aliases" do
+          specify do
+            expect(described_class).to receive(:warn).exactly(2).times.and_return(
+              nil
+            )
+          end
+
+          after do
+            file.read_yaml({
+              :aliases => true
+            })
           end
         end
 

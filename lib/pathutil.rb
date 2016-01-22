@@ -62,29 +62,11 @@ class Pathutil
 
   # --------------------------------------------------------------------------
 
-  def read_yaml(safe: true, whitelist_classes: [], whitelist_symbols: [], throw_missing: false, aliases: true)
-    require "yaml"
+  def read_yaml(throw_missing: false, **kwd)
+    self.class.parse_yaml(
+      read, **kwd
+    )
 
-    unless safe
-      return YAML.load(
-        read
-      )
-    end
-
-    if !YAML.respond_to?(:safe_load)
-      setup_safe_yaml whitelist_classes
-      SafeYAML.load(
-        read
-      )
-
-    else
-      YAML.safe_load(
-        read,
-        whitelist_classes,
-        whitelist_symbols,
-        aliases
-      )
-    end
   rescue Errno::ENOENT
     throw_missing ? raise : (
       return {}
@@ -666,21 +648,38 @@ class Pathutil
 
   # --------------------------------------------------------------------------
 
-  private
-  def setup_safe_yaml(whitelist_classes)
-    warn "WARN: SafeYAML will be removed when Ruby 2.0 goes EOL."
-    require "safe_yaml/load"
-
-    SafeYAML.restore_defaults!
-    whitelist_classes.map(&SafeYAML.method(
-      :whitelist_class!
-    ))
-  end
-
-  # --------------------------------------------------------------------------
-
   class << self
     attr_writer :encoding
+
+    # ------------------------------------------------------------------------
+    # Wraps around YAML and SafeYAML to provide alternatives to Rubies.
+    # @note We default aliases to yes so we can detect if you explicit true.
+    # ------------------------------------------------------------------------
+
+    def parse_yaml(data, safe: true, whitelist_classes: [], whitelist_symbols: [], aliases: :yes)
+      require "yaml"
+
+      unless safe
+        return YAML.load(
+          data
+        )
+      end
+
+      if !YAML.respond_to?(:safe_load)
+        setup_safe_yaml whitelist_classes, aliases
+        SafeYAML.load(
+          data
+        )
+
+      else
+        YAML.safe_load(
+          data,
+          whitelist_classes,
+          whitelist_symbols,
+          aliases
+        )
+      end
+    end
 
     # ------------------------------------------------------------------------
     # Aliases the default system encoding to us so that we can do most read
@@ -717,6 +716,20 @@ class Pathutil
           prefix, suffix
         )
       )
+    end
+
+    # ------------------------------------------------------------------------
+
+    private
+    def setup_safe_yaml(whitelist_classes, aliases)
+      warn "WARN: SafeYAML will be removed when Ruby 2.0 goes EOL."
+      warn "WARN: Disabling aliases is not supported with SafeYAML" if aliases && aliases != :yes
+      require "safe_yaml/load"
+
+      SafeYAML.restore_defaults!
+      whitelist_classes.map(&SafeYAML.method(
+        :whitelist_class!
+      ))
     end
   end
 

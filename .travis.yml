@@ -12,6 +12,7 @@ env:
   - BENCHMARK=true
 matrix:
   allow_failures:
+    - env: BENCHMARK=true
     - rvm: *jruby_stable
 
   exclude:

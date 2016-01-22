@@ -1,16 +1,24 @@
 ---
-cache: bundler
 sudo: false
-os:
-- linux
+cache: bundler
+os: linux
 rvm:
-- 2.1.8
-- 2.2.4
-- 2.3.0
-- jruby-9.0.4.0
+  - &ruby_old1 2.1.8
+  - &ruby_old2 2.2.4
+  - &ruby_stable 2.3.0
+  - &jruby_stable jruby-9.0.4.0
+env:
+  - ""
+  - BENCHMARK=true
 matrix:
   allow_failures:
-  - rvm: jruby-9.0.4.0
+    - rvm: *jruby_stable
+
+  exclude:
+    - { env: BENCHMARK=true, rvm: *ruby_old1 }
+    - { env: BENCHMARK=true, rvm: *jruby_stable }
+    - { env: BENCHMARK=true, rvm: *ruby_old2 }
+
 notifications:
   email:
   - jordon@envygeeks.io

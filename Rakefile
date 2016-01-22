@@ -9,9 +9,12 @@ require "simple/ansi"
 require "pathutil"
 require "json"
 
-task :default => [:spec]
-RSpec::Core::RakeTask.new :spec
+task :default => [
+  ENV["BENCHMARK"] ? :benchmark : :spec
+]
+
 BenchmarkTask.new :benchmark
+RSpec::Core::RakeTask.new :spec
 task :test => :spec
 
 # ----------------------------------------------------------------------------

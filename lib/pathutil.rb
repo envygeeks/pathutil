@@ -11,37 +11,7 @@ require "find"
 
 class Pathutil
   extend Forwardable::Extended
-  self.class.send(:attr_writer, :encoding)
   attr_writer :encoding
-
-  #
-
-  class << self
-
-    # ------------------------------------------------------------------------
-    # Aliases the default system encoding to us so that we can do most read
-    # and write operations with that encoding, instead of being crazy.
-    # @note you are encouraged to override this if you need to.
-    # ------------------------------------------------------------------------
-
-    def encoding
-      return @encoding ||= begin
-        Encoding.default_external
-      end
-    end
-
-    # ------------------------------------------------------------------------
-    # Normalize CRLF -> LF on Windows reads, to ease  your troubles.
-    # Normalize LF -> CLRF on Windows write, to ease their troubles.
-    # ------------------------------------------------------------------------
-
-    def normalize
-      return @normalize ||= {
-        :read  => Gem.win_platform?,
-        :write => Gem.win_platform?
-      }
-    end
-  end
 
   # --------------------------------------------------------------------------
 
@@ -701,6 +671,46 @@ class Pathutil
       :whitelist_class!
     ))
   end
+
+  # --------------------------------------------------------------------------
+
+  class << self
+    attr_writer :encoding
+
+    # ------------------------------------------------------------------------
+    # Aliases the default system encoding to us so that we can do most read
+    # and write operations with that encoding, instead of being crazy.
+    # @note you are encouraged to override this if you need to.
+    # ------------------------------------------------------------------------
+
+    def encoding
+      return @encoding ||= begin
+        Encoding.default_external
+      end
+    end
+
+    # ------------------------------------------------------------------------
+    # Normalize CRLF -> LF on Windows reads, to ease  your troubles.
+    # Normalize LF -> CLRF on Windows write, to ease their troubles.
+    # ------------------------------------------------------------------------
+
+    def normalize
+      return @normalize ||= {
+        :read  => Gem.win_platform?,
+        :write => Gem.win_platform?
+      }
+    end
+
+    # ------------------------------------------------------------------------
+
+    def make_tmpname(prefix, suffix)
+      File.join(
+        Dir::Tmpname.tmpdir,
+        Dir::Tmpname.make_tmpname(
+          prefix, suffix
+        )
+      )
+    end
 
   # --------------------------------------------------------------------------
 

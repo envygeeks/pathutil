@@ -721,6 +721,28 @@ class Pathutil
 
     # ------------------------------------------------------------------------
 
+    def tmpdir(*args)
+      rtn = new(make_tmpname(*args)).tap(&:mkdir)
+      ObjectSpace.define_finalizer(rtn, proc do
+        rtn.rm_rf
+      end)
+
+      rtn
+    end
+
+    # ------------------------------------------------------------------------
+
+    def tmpfile(*args)
+      rtn = new(make_tmpname(*args)).tap(&:touch)
+      ObjectSpace.define_finalizer(rtn, proc do
+        rtn.rm_rf
+      end)
+
+      rtn
+    end
+
+    # ------------------------------------------------------------------------
+
     private
     def setup_safe_yaml(whitelist_classes, aliases)
       warn "WARN: SafeYAML will be removed when Ruby 2.0 goes EOL."

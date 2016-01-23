@@ -1297,4 +1297,24 @@ describe Pathutil do
       end
     end
   end
+
+  #
+
+  describe ".tmpdir" do
+    it "creates a temporary directory" do
+      expect(described_class.tmpdir.directory?).to eq(
+        true
+      )
+    end
+  end
+
+  #
+
+  describe "#.tmpfile" do
+    it "creates a tempoary file" do
+      expect(described_class.tmpfile.file?).to eq(
+        true
+      )
+    end
+  end
 end

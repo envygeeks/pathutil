@@ -1165,4 +1165,14 @@ describe Pathutil do
       )
     end
   end
+
+  #
+
+  describe "#.pwd" do
+    it "should return the current pwd as a #{self.class.name}" do
+      expect(described_class.pwd).to eq(described_class.new(
+        Dir.pwd
+      ))
+    end
+  end
 end

@@ -655,6 +655,19 @@ class Pathutil
     attr_writer :encoding
 
     # ------------------------------------------------------------------------
+    # Get the current directory that Ruby knows about.
+    # ------------------------------------------------------------------------
+
+    def pwd
+      new(
+        Dir.pwd
+      )
+    end
+
+    alias gcwd pwd
+    alias cwd  pwd
+
+    # ------------------------------------------------------------------------
     # Aliases the default system encoding to us so that we can do most read
     # and write operations with that encoding, instead of being crazy.
     # @note you are encouraged to override this if you need to.

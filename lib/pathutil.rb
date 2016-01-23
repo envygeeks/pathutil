@@ -45,7 +45,7 @@ class Pathutil
             file = self.class.new(file)
             if yield(file)
               ary.push(
-                self
+                file
               )
             end
 

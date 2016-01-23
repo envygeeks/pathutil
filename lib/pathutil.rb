@@ -17,7 +17,8 @@ class Pathutil
 
   def initialize(path)
     return @path = path if path.is_a?(String)
-    @path = path.respond_to?(:to_path) ? path.to_path : path.to_s
+    return @path = path.to_path if path.respond_to?(:to_path)
+    return @path = path.to_s
   end
 
   # --------------------------------------------------------------------------

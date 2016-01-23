@@ -411,7 +411,8 @@ class Pathutil
   # --------------------------------------------------------------------------
 
   def parent
-    self.class.new(File.join(
+    return self if @path == "/"
+    self.class.new(absolute?? File.dirname(@path) : File.join(
       @path, ".."
     ))
   end

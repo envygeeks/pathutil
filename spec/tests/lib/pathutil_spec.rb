@@ -11,7 +11,7 @@ describe Pathutil do
   (Pathname.instance_methods - Object.instance_methods).each do |method|
     next if method == :cleanpath
 
-    specify do
+    it "should have #{method}" do
       expect(described_class).to have_method(
         method
       )
@@ -114,11 +114,9 @@ describe Pathutil do
       file.rm_rf
     end
 
-    #
-
     context "when the file doesn't exist" do
       context "and the user doesn't set throw_missing" do
-        specify do
+        it "should return a blank hash as if nothing actually went wrong" do
           expect(file.read_yaml).to eq({
             #
           })
@@ -128,141 +126,11 @@ describe Pathutil do
       #
 
       context "and the user sets throw_missing" do
-        specify do
+        it "should throw the parse" do
           expect { file.read_yaml(throw_missing: true) }.to raise_error(
             Errno::ENOENT
           )
         end
-      end
-    end
-
-    #
-
-    context "when safe" do
-      before do
-        file.write(
-          ":hello: :world"
-        )
-      end
-
-      it "should reject any special classes", :disable => :oldest_ruby do
-        expect { file.read_yaml }.to raise_error(
-          Psych::DisallowedClass
-        )
-      end
-
-      context "when using safe_yaml" do
-        before do
-          allow(YAML).to receive(:respond_to?).with(:safe_load).and_return(false)
-          allow(described_class).to receive(:warn).and_return(
-            nil
-          )
-        end
-
-        context do
-          specify do
-            expect(described_class).to receive(:warn).and_return(
-              nil
-            )
-          end
-
-          after do
-            file.read_yaml
-          end
-        end
-
-        context "when trying to disable aliases" do
-          specify do
-            expect(described_class).to receive(:warn).exactly(2).times.and_return(
-              nil
-            )
-          end
-
-          after do
-            file.read_yaml({
-              :aliases => true
-            })
-          end
-        end
-
-        specify do
-          expect(file.read_yaml).to eq({
-            ":hello"=>":world"
-          })
-        end
-      end
-    end
-
-    #
-
-    context "whitelisting classes" do
-      before do
-        file.write(
-          ":hello: :world"
-        )
-      end
-
-      #
-
-      specify do
-        expect(file.read_yaml(:whitelist_classes => [Symbol])).to eq({
-          :hello => :world
-        })
-      end
-    end
-
-    #
-
-    context "diallowing aliases" do
-      before do
-        file.write(
-          "version: &version 1\nother_version: *version"
-        )
-      end
-
-      #
-
-      specify do
-        expect { file.read_yaml(:aliases => false) }.to raise_error(
-          Psych::BadAlias
-        )
-      end
-    end
-
-    #
-
-    context do
-      before do
-        file.write(
-          "version: &version 1\nother_version: *version"
-        )
-      end
-
-      #
-
-      it "should allow aliases by default" do
-        expect(file.read_yaml).to eq({
-          "version" => 1, "other_version" => 1
-        })
-      end
-    end
-
-    #
-
-    context do
-      before do
-        file.write(
-          "hello: world\nworld: hello"
-        )
-      end
-
-      #
-
-      specify do
-        expect(file.read_yaml).to eq({
-          "hello" => "world",
-          "world" => "hello"
-        })
       end
     end
   end
@@ -278,7 +146,7 @@ describe Pathutil do
 
     context "when the file doesn't exist" do
       context "and the user doesn't set throw_missing" do
-        specify do
+        it "should return a blank hash as if nothing actually went wrong" do
           expect(file.read_json).to eq({
             #
           })
@@ -288,7 +156,7 @@ describe Pathutil do
       #
 
       context "and the user sets throw_missing" do
-        specify do
+        it "should throw the parse" do
           expect { file.read_json(:throw_missing => true) }.to raise_error(
             Errno::ENOENT
           )
@@ -308,7 +176,7 @@ describe Pathutil do
 
       #
 
-      specify do
+      it "should parse JSON" do
         expect(file.read_yaml).to eq({
           "hello" => "world",
           "world" => "hello"
@@ -320,16 +188,20 @@ describe Pathutil do
   #
 
   describe "#split_path" do
-    specify do
+    it "should split the path and return that result" do
       expect(subject.split_path).to eq [
         "", "tmp"
       ]
     end
   end
 
+  # --------------------------------------------------------------------------
+  # rubocop:disable Lint/UselessComparison
+  # rubocop:disable Style/CaseEquality
+  # --------------------------------------------------------------------------
+
   describe "#===" do
-    specify do
-      # rubocop:disable Style/CaseEquality
+    it "should match itself" do
       expect(subject === subject.basename).to eq(
         false
       )
@@ -337,7 +209,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not match another" do
       expect(subject === Pathname.new(subject)).to eq(
         false
       )
@@ -345,18 +217,19 @@ describe Pathutil do
 
     #
 
-    specify do
-      # rubocop:disable Lint/UselessComparison
+    it "should match" do
       expect(subject === subject).to eq(
         true
       )
     end
   end
 
-  #
+  # --------------------------------------------------------------------------
+  # rubocop:enable Style/CaseEquality
+  # --------------------------------------------------------------------------
 
   describe "#==" do
-    specify do
+    it "should match strings" do
       expect(subject == subject.to_s).to eq(
         true
       )
@@ -364,7 +237,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not match classes" do
       expect(subject == Pathname.new(subject)).to eq(
         false
       )
@@ -372,7 +245,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should match itself" do
       expect(subject == subject).to eq(
         true
       )
@@ -382,15 +255,7 @@ describe Pathutil do
   #
 
   describe "#>=" do
-    specify do
-      expect(subject >= alt).to eq(
-        false
-      )
-    end
-
-    #
-
-    specify do
+    it "sholuld match paths ahead of the path" do
       expect(subject.join(alt.basename) >= subject).to eq(
         true
       )
@@ -398,7 +263,15 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not match paths that are not within one another" do
+      expect(subject >= alt).to eq(
+        false
+      )
+    end
+
+    #
+
+    it "should match itself" do
       expect(subject >= subject).to eq(
         true
       )
@@ -408,15 +281,7 @@ describe Pathutil do
   #
 
   describe "#>" do
-    specify do
-      expect(subject > alt).to eq(
-        false
-      )
-    end
-
-    #
-
-    specify do
+    it "should match paths below the path" do
       expect(subject.join(alt.basename) > subject).to eq(
         true
       )
@@ -424,7 +289,15 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not match paths that are not within one another" do
+      expect(subject > alt).to eq(
+        false
+      )
+    end
+
+    #
+
+    it "should not match itself" do
       expect(subject > subject).to eq(
         false
       )
@@ -434,7 +307,7 @@ describe Pathutil do
   #
 
   describe "#<=>" do
-    specify do
+    it "should match strings" do
       expect(subject <=> subject.to_s).to eq(
         0
       )
@@ -442,7 +315,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should match itself" do
       expect(subject <=> subject).to eq(
         0
       )
@@ -452,15 +325,15 @@ describe Pathutil do
   #
 
   describe "#<=" do
-    specify do
-      expect(subject <= alt.join(subject.basename)).to eq(
+    it "should not match paths not within one another" do
+      expect(subject <= alt).to eq(
         false
       )
     end
 
     #
 
-    specify do
+    it "should match itself" do
       expect(subject <= subject).to eq(
         true
       )
@@ -468,7 +341,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should match pathes below but within itself" do
       expect(subject <= subject.join(alt.basename)).to eq(
         true
       )
@@ -478,15 +351,15 @@ describe Pathutil do
   #
 
   describe "#<" do
-    specify do
-      expect(subject < alt.join(subject.basename)).to eq(
+    it "should not match paths not within one another" do
+      expect(subject < alt).to eq(
         false
       )
     end
 
     #
 
-    specify do
+    it "should not match itself" do
       expect(subject < subject).to eq(
         false
       )
@@ -494,7 +367,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should match pathes below but within itself" do
       expect(subject < subject.join(alt.basename)).to eq(
         true
       )
@@ -504,7 +377,7 @@ describe Pathutil do
   #
 
   describe "#absolute?" do
-    specify do
+    it "should not match relative paths" do
       expect(subject.basename.absolute?).to eq(
         false
       )
@@ -512,7 +385,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should match a path that starts with /" do
       expect(subject.absolute?).to eq(
         true
       )
@@ -522,7 +395,7 @@ describe Pathutil do
   #
 
   describe "#ascend" do
-    specify do
+    it "should break apart the path and yield each part" do
       expect { |b| subject.ascend(&b) }.to yield_successive_args(
         subject, subject.dirname
       )
@@ -530,7 +403,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not duplicate itself" do
       expect { |b| subject.basename.ascend(&b) }.to yield_successive_args(
         subject.basename
       )
@@ -538,7 +411,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should ship the user an enum if no block is given" do
       expect(subject.ascend).to be_a(
         Enumerator
       )
@@ -548,7 +421,7 @@ describe Pathutil do
   #
 
   describe "#descend" do
-    specify do
+    it "should break apart the path and yield each part" do
       expect { |b| subject.descend(&b) }.to yield_successive_args(
         subject.dirname, subject
       )
@@ -556,7 +429,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not duplicate itself" do
       expect { |b| subject.basename.descend(&b) }.to yield_successive_args(
         subject.basename
       )
@@ -564,7 +437,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should ship the user an enum if no block is given" do
       expect(subject.descend).to be_a(
         Enumerator
       )
@@ -574,7 +447,7 @@ describe Pathutil do
   #
 
   describe "#each_line" do
-    specify do
+    it "should ship the user an enum if no block is given" do
       expect(file.each_line).to be_a(
         Enumerator
       )
@@ -582,7 +455,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should yield each line" do
       expect { |b| file.each_line(&b) }.to yield_successive_args(
         "#{alt.basename}\n", subject.basename
       )
@@ -592,7 +465,7 @@ describe Pathutil do
   #
 
   describe "#fnmatch?" do
-    specify do
+    it "should directly match" do
       expect(subject.fnmatch?(subject.to_s)).to eq(
         true
       )
@@ -600,7 +473,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should regexp match" do
       expect(subject.fnmatch?(subject.to_regexp)).to eq(
         true
       )
@@ -608,7 +481,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should object match" do
       expect(subject.fnmatch?(subject)).to eq(
         true
       )
@@ -618,7 +491,7 @@ describe Pathutil do
   #
 
   describe "#root?" do
-    specify do
+    it "should match only /" do
       expect(subject.parent.expand_path.root?).to eq(
         true
       )
@@ -626,7 +499,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not match any path that is not /" do
       expect(subject.root?).to eq(
         false
       )
@@ -636,7 +509,7 @@ describe Pathutil do
   #
 
   describe "#in_path?" do
-    specify do
+    it "should match a path that is deeper than but within a given path" do
       expect(subject.in_path?(subject.parent)).to eq(
         true
       )
@@ -644,7 +517,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not match if the reverse is given" do
       expect(subject.in_path?(subject.join(alt.basename))).to eq(
         false
       )
@@ -652,7 +525,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should match itself" do
       expect(subject.in_path?(subject)).to eq(
         true
       )
@@ -688,7 +561,7 @@ describe Pathutil do
 
         #
 
-        specify do
+        it "should get the realpath and compare it" do
           expect(tmpdir2.join(alt).in_path?(tmpdir1)).to eq(
             true
           )
@@ -720,7 +593,7 @@ describe Pathutil do
           )
         end
 
-        it do
+        it "should refute it if the realpaths are not within on another" do
           expect(dir.join(alt).in_path?(dir)).to eq(
             false
           )
@@ -738,7 +611,7 @@ describe Pathutil do
   #
 
   describe "#children" do
-    specify do
+    it "should get the files and yield them" do
       other = Pathname.new(subject).children.sort.map(&:to_s)
       expect(subject.children.sort.map(&:to_s)).to eq(
         other
@@ -765,7 +638,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should return an enum if no block is given" do
       expect(subject.glob("*")).to be_a(
         Enumerator
       )
@@ -773,7 +646,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should run the glob" do
       expect(subject.glob("*").to_a.map(&:to_s).sort).to match(
         Dir.glob(subject.join("*")).sort
       )
@@ -781,7 +654,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should yield a given block with each file" do
       expect { |b| subject.glob("*", &b) }.to yield_successive_args(
         *([described_class] * Dir.glob(subject.join("*")).size)
       )
@@ -799,7 +672,7 @@ describe Pathutil do
 
       #
 
-      specify do
+      it "should chdir to the requested dir" do
         expect(Dir.pwd).to eq(
           subject.to_s
         )
@@ -816,19 +689,24 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should allow the user to chdir in a block and exit that chdir" do
+      old_pwd = Dir.pwd
       subject.chdir do
         expect(Dir.pwd).to eq(
           subject.to_s
         )
       end
+
+      expect(Dir.pwd).to eq(
+        old_pwd
+      )
     end
   end
 
   #
 
   describe "#find" do
-    specify do
+    it "should return an enum if no block is given" do
       expect(subject.find).to be_a(
         Enumerator
       )
@@ -836,7 +714,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should behave like Pathname#find" do
       expect(subject.find.to_a.map(&:to_s).sort).to eq(
         Pathname.new(subject).find.to_a.map(&:to_s).sort
       )
@@ -846,7 +724,7 @@ describe Pathutil do
   #
 
   describe "#each_filename" do
-    specify do
+    it "should return an enum if no block is given" do
       expect(subject.each_filename).to be_a(
         Enumerator
       )
@@ -854,7 +732,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should give a list of file names" do
       expect(subject.each_filename.to_a).to eq [
         subject.basename.to_s
       ]
@@ -862,7 +740,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should yield each file name back to the given block" do
       expect { |b| subject.each_filename(&b) }.to yield_with_args(
         subject.basename.to_s
       )
@@ -872,7 +750,7 @@ describe Pathutil do
   #
 
   describe "#split" do
-    specify do
+    it "should break apart the directory and the file" do
       expect(subject.split).to eq [
         subject.dirname, subject.basename
       ]
@@ -882,7 +760,7 @@ describe Pathutil do
   #
 
   describe "#sub_ext" do
-    specify do
+    it "should add an extension even if one doesn't exist" do
       expect(subject.sub_ext(".rb").to_s).to eq(
         "#{subject}.rb"
       )
@@ -890,7 +768,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should replace the extension with the new one" do
       expect(described_class.new("hello.txt").sub_ext(".rb").to_s).to eq(
         "hello.rb"
       )
@@ -900,7 +778,7 @@ describe Pathutil do
   #
 
   describe "#relative_path_from" do
-    specify do
+    it "should return the relative path from the given path" do
       expect(subject.join(alt.basename).relative_path_from(subject)).to eq(
         alt.basename
       )
@@ -908,17 +786,19 @@ describe Pathutil do
 
     #
 
-    specify do
-      expect(subject.relative_path_from(alt)).to eq(
-        subject
-      )
+    context "when the given path is not within the path" do
+      it "should return the absolute path" do
+        expect(subject.relative_path_from(alt)).to eq(
+          subject
+        )
+      end
     end
   end
 
   #
 
   describe "#enforce_root" do
-    specify do
+    it "should enforce the root to the left" do
       expect(subject.enforce_root(alt)).to eq(
         alt.join(subject)
       )
@@ -926,7 +806,7 @@ describe Pathutil do
 
     #
 
-    specify do
+    it "should not double enforce the root" do
       expect(subject.enforce_root(subject)).to eq(
         subject
       )
@@ -936,7 +816,7 @@ describe Pathutil do
   #
 
   describe "#read" do
-    specify do
+    it "should read the file" do
       expect(file.read).to eq(File.read(
         file
       ))
@@ -952,7 +832,7 @@ describe Pathutil do
 
       #
 
-      specify do
+      it "should use encode to convert CRLF to LF" do
         expect(file.read).to eq(
           "hello\nworld"
         )
@@ -962,7 +842,7 @@ describe Pathutil do
     #
 
     context "with an encoding argument" do
-      specify do
+      it "should set the encoding for the data stream" do
         expect(file.read(:encoding => "ASCII").encoding.to_s).to eq(
           "US-ASCII"
         )
@@ -980,7 +860,7 @@ describe Pathutil do
 
       #
 
-      specify do
+      it "should set the encoding for the data stream" do
         expect(file.read.encoding.to_s).to eq(
           "US-ASCII"
         )
@@ -998,7 +878,7 @@ describe Pathutil do
 
       #
 
-      specify do
+      it "should set the encoding for the data stream" do
         expect(described_class.new(file).read.encoding.to_s).to eq(
           "US-ASCII"
         )
@@ -1017,10 +897,12 @@ describe Pathutil do
 
       #
 
-      specify do
-        expect(file.read).to eq(
-          "hello\r\nworld"
-        )
+      context "when on Windows" do
+        it "should convert LF to CRLF" do
+          expect(file.read).to eq(
+            "hello\r\nworld"
+          )
+        end
       end
     end
 
@@ -1035,7 +917,7 @@ describe Pathutil do
 
       #
 
-      specify do
+      it "should set the encoding while writing" do
         expect(`file -i #{file.shellescape}`).to match(
           /charset=us-ascii$\n/
         )
@@ -1052,7 +934,7 @@ describe Pathutil do
 
       #
 
-      specify do
+      it "should set the encoding while writing" do
         expect(`file -i #{file.shellescape}`).to match(
           /charset=us-ascii$\n/
         )
@@ -1069,7 +951,7 @@ describe Pathutil do
 
       #
 
-      specify do
+      it "should set the encoding while writing" do
         expect(`file -i #{file.shellescape}`).to match(
           /charset=us-ascii$\n/
         )
@@ -1141,7 +1023,7 @@ describe Pathutil do
 
         #
 
-        specify do
+        it "should copy all files" do
           name1.children.map { |path| path.gsub(/#{name1.regexp_escape}/, name2) }.each do |file|
             expect(file).to exist
           end
@@ -1150,7 +1032,7 @@ describe Pathutil do
 
       #
 
-      context "with symlinks out of the path" do
+      context "with symlinks out of the root" do
         context "when it's a file" do
           before do
             tmpfile1.touch
@@ -1161,7 +1043,7 @@ describe Pathutil do
 
           #
 
-          specify do
+          it "should reject it" do
             expect { name1.safe_copy(name2, :root => tmpdir1) }.to raise_error(
               Errno::EPERM
             )
@@ -1171,7 +1053,7 @@ describe Pathutil do
         #
 
         context "when it's a directory" do
-          context "it the symlink" do
+          context "and it is the symlink to another node" do
             before do
               tmpdir2.symlink(
                 name1
@@ -1180,7 +1062,7 @@ describe Pathutil do
 
             #
 
-            specify do
+            it "should reject it" do
               expect { name1.safe_copy(name2, :root => tmpdir1) }.to raise_error(
                 Errno::EPERM
               )
@@ -1199,7 +1081,7 @@ describe Pathutil do
 
             #
 
-            specify do
+            it "should reject it" do
               expect { name1.safe_copy(name2, :root => tmpdir1) }.to raise_error(
                 Errno::EPERM
               )
@@ -1218,15 +1100,17 @@ describe Pathutil do
 
             #
 
-            specify do
+            it "should reject it" do
               expect { name1.safe_copy(name2, :root => tmpdir1) }.to raise_error(
                 Errno::EPERM
               )
             end
           end
 
+          # ------------------------------------------------------------------
           # rubocop:disable Style/MultilineMethodCallIndentation
           # rubocop:disable Style/FirstParameterIndentation
+          # ------------------------------------------------------------------
 
           context "when embedded deeply" do
             before do
@@ -1243,7 +1127,7 @@ describe Pathutil do
 
             #
 
-            specify do
+            it "should still reject it" do
               expect { name1.safe_copy(name2, :root => tmpdir1) }.to raise_error(
                 Errno::EPERM
               )
@@ -1257,42 +1141,6 @@ describe Pathutil do
       after do
         [tmpdir1, tmpdir2, tmpfile1, name1, name2].map(
           &:rm_rf
-        )
-      end
-    end
-  end
-
-  #
-
-  describe ".make_tmpname" do
-    let :result do
-      described_class.make_tmpname(
-        "hello", "world"
-      )
-    end
-
-    #
-
-    specify do
-      expect(result).to match(
-        %r!/hello-!
-      )
-    end
-
-    #
-
-    specify do
-      expect(result).to end_with(
-        "-world"
-      )
-    end
-
-    #
-
-    context "when a user sends no prefix or suffix" do
-      specify do
-        expect { described_class.make_tmpname }.not_to(
-          raise_error
         )
       end
     end

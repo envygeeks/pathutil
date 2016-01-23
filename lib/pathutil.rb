@@ -4,14 +4,16 @@
 # Encoding: utf-8
 # ----------------------------------------------------------------------------
 
+require "pathutil/helpers"
 require "forwardable/extended"
 require "find"
 
 #
 
 class Pathutil
-  extend Forwardable::Extended
   attr_writer :encoding
+  extend Forwardable::Extended
+  extend Helpers
 
   # --------------------------------------------------------------------------
 
@@ -65,7 +67,7 @@ class Pathutil
   # --------------------------------------------------------------------------
 
   def read_yaml(throw_missing: false, **kwd)
-    self.class.parse_yaml(
+    self.class.load_yaml(
       read, **kwd
     )
 
@@ -653,36 +655,6 @@ class Pathutil
     attr_writer :encoding
 
     # ------------------------------------------------------------------------
-    # Wraps around YAML and SafeYAML to provide alternatives to Rubies.
-    # @note We default aliases to yes so we can detect if you explicit true.
-    # ------------------------------------------------------------------------
-
-    def parse_yaml(data, safe: true, whitelist_classes: [], whitelist_symbols: [], aliases: :yes)
-      require "yaml"
-
-      unless safe
-        return YAML.load(
-          data
-        )
-      end
-
-      if !YAML.respond_to?(:safe_load)
-        setup_safe_yaml whitelist_classes, aliases
-        SafeYAML.load(
-          data
-        )
-
-      else
-        YAML.safe_load(
-          data,
-          whitelist_classes,
-          whitelist_symbols,
-          aliases
-        )
-      end
-    end
-
-    # ------------------------------------------------------------------------
     # Aliases the default system encoding to us so that we can do most read
     # and write operations with that encoding, instead of being crazy.
     # @note you are encouraged to override this if you need to.
@@ -708,19 +680,6 @@ class Pathutil
 
     # ------------------------------------------------------------------------
 
-    def make_tmpname(prefix = "", suffix = nil)
-      prefix = prefix.gsub(/\-\Z/, "") + "-" unless prefix.empty?
-
-      File.join(
-        Dir::Tmpname.tmpdir,
-        Dir::Tmpname.make_tmpname(
-          prefix, suffix
-        )
-      )
-    end
-
-    # ------------------------------------------------------------------------
-
     def tmpdir(*args)
       rtn = new(make_tmpname(*args)).tap(&:mkdir)
       ObjectSpace.define_finalizer(rtn, proc do
@@ -739,20 +698,6 @@ class Pathutil
       end)
 
       rtn
-    end
-
-    # ------------------------------------------------------------------------
-
-    private
-    def setup_safe_yaml(whitelist_classes, aliases)
-      warn "WARN: SafeYAML will be removed when Ruby 2.0 goes EOL."
-      warn "WARN: Disabling aliases is not supported with SafeYAML" if aliases && aliases != :yes
-      require "safe_yaml/load"
-
-      SafeYAML.restore_defaults!
-      whitelist_classes.map(&SafeYAML.method(
-        :whitelist_class!
-      ))
     end
   end
 

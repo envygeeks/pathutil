@@ -16,6 +16,7 @@ class Pathutil
   # --------------------------------------------------------------------------
 
   def initialize(path)
+    return @path = path if path.is_a?(String)
     @path = path.respond_to?(:to_path) ? path.to_path : path.to_s
   end
 
@@ -433,9 +434,7 @@ class Pathutil
   # --------------------------------------------------------------------------
 
   def sub_ext(ext)
-    self.class.new(
-      "#{@path.gsub(/\..+$/, "")}#{ext}"
-    )
+    self.class.new(@path.chomp(File.extname(@path)) + ext)
   end
 
   # --------------------------------------------------------------------------

@@ -13,6 +13,6 @@ data = "hello: world\nworld: hello"
 Benchmark.ips :quiet => true do |x|
   x.json! "benchmark.json"
   x.report("A:SafeYAML.load") { SafeYAML.load(data) }
-  x.report("B:Pathutil::Helpers.parse_yaml") { Pathutil.parse_yaml(data) }
+  x.report("B:Pathutil::Helpers.load_yaml") { Pathutil::Helpers.load_yaml(data) }
   x.compare!
 end

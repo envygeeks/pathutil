@@ -34,11 +34,12 @@ class Pathutil
 
     # ------------------------------------------------------------------------
 
-    def make_tmpname(prefix = "", suffix = nil, root = Dir::Tmpname.tmpdir)
+    def make_tmpname(prefix = "", suffix = nil, root = nil)
       prefix = prefix.join("-") if prefix.is_a?(Array)
       suffix = suffix.join("-") if suffix.is_a?(Array)
       suffix = suffix.gsub(/\A\-/, "") unless !suffix || suffix.empty?
       prefix = prefix.gsub(/\-\Z/, "") + "-" unless prefix.empty?
+      root ||= Dir::Tmpname.tmpdir
 
       File.join(root, Dir::Tmpname.make_tmpname(
         prefix, suffix

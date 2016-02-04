@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.0
+#### Added/Changed
+- Add `Pathutil.pwd`
+- Add `Pathutil.getcwd`
+- Split up YAML processing so it's encapsulated better.
+- Start benchmarking YAML.
+- Add `Pathutil.cwd`
+
 ## 0.2.0
 #### Added/Changed
 - Make descend slightly faster without a block.

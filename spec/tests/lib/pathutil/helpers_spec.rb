@@ -134,6 +134,20 @@ describe Pathutil::Helpers do
   #
 
   describe ".make_tmpname" do
+    context "when sendign a root" do
+      let :result do
+        described_class.make_tmpname(
+          "hello", "person", "/world"
+        )
+      end
+
+      it "should use that folder" do
+        expect(result).to start_with(
+          "/world"
+        )
+      end
+    end
+
     let :result do
       described_class.make_tmpname(
         "hello", "world"

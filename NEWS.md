@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.0
+### Added/Changed
+- Add the ability to use a custom root on `Pathutil.tmpfile`
+- Add the ability to use a custom root on `Pathutil.make_tmpname`
+- Add the ability to use a custom root on `Pathutil.tmpdir`
+
 ## 0.3.0
 #### Added/Changed
 - Add `Pathutil.pwd`

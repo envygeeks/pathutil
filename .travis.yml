@@ -3,22 +3,25 @@ sudo: false
 cache: bundler
 os: linux
 rvm:
-  - &ruby_old1 2.1.8
-  - &ruby_old2 2.2.4
-  - &ruby_stable 2.3.0
-  - &jruby_stable jruby-9.0.4.0
+  - &ruby1 2.1.8
+  - &ruby2 2.2.4
+  - &ruby3 2.3.0
+  - &jruby-previous jruby-9.0.4.0
+  - &jruby jruby-9.0.5.0
 env:
   - ""
   - BENCHMARK=true
 matrix:
   allow_failures:
     - env: BENCHMARK=true
-    - rvm: *jruby_stable
+    - rvm: *jruby-previous
+    - rvm: *jruby
 
   exclude:
-    - { env: BENCHMARK=true, rvm: *ruby_old1 }
-    - { env: BENCHMARK=true, rvm: *jruby_stable }
-    - { env: BENCHMARK=true, rvm: *ruby_old2 }
+    - { env: BENCHMARK=true, rvm: *ruby1 }
+    - { env: BENCHMARK=true, rvm: *jruby }
+    - { env: BENCHMARK=true, rvm: *jruby-previous }
+    - { env: BENCHMARK=true, rvm: *ruby2 }
 
 notifications:
   email:

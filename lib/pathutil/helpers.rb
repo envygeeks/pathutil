@@ -40,7 +40,7 @@ class Pathutil
 
       root ||= Dir::Tmpname.tmpdir
       File.join(root, Dir::Tmpname.make_tmpname(
-        prefix.compact, suffix
+        prefix, suffix
       ))
     end
 
@@ -68,7 +68,7 @@ class Pathutil
       end
 
       return [
-        prefix, ext
+        prefix, ext || ""
       ]
     end
 

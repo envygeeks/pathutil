@@ -7,6 +7,7 @@ gem "rake", :require => false
 gemspec
 
 group :test do
+  gem "luna-rspec-formatters", :require => false
   gem "codeclimate-test-reporter", :require => false
   gem "safe_yaml", :require => false
 end
@@ -16,7 +17,6 @@ group :development do
   gem "rspec-helpers", :require => false
   gem "luna-rubocop-formatters", :require => false
   gem "rubocop", :github => "bbatsov/rubocop", :require => false
-  gem "luna-rspec-formatters", :require => false
   gem "benchmark-ips", :require => false
   gem "simple-ansi", :require => false
   gem "pry", :require => false

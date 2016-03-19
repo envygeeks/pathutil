@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.5.0
+## 0.6.0
+
+- Remove and bring back comment headers for code clarity.
+- Reorganize some basic structures without altering the behavior.
+
 ## 0.4.0
 ### Added/Changed
 - Add the ability to use a custom root on `Pathutil.tmpfile`

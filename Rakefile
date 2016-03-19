@@ -1,6 +1,8 @@
+# ----------------------------------------------------------------------------
 # Frozen-string-literal: true
 # Copyright: 2015-2016 Jordon Bedwell - MIT License
 # Encoding: utf-8
+# ----------------------------------------------------------------------------
 
 require "open3"
 require "rspec/core/rake_task"
@@ -10,13 +12,19 @@ require "simple/ansi"
 require "pathutil"
 require "json"
 
+# ----------------------------------------------------------------------------
+
 task :default => [
   ENV["BENCHMARK"] ? :benchmark : :spec
 ]
 
+# ----------------------------------------------------------------------------
+
 BenchmarkTask.new :benchmark
 RSpec::Core::RakeTask.new :spec
 task :test => :spec
+
+# ----------------------------------------------------------------------------
 
 namespace :diff do
   desc "List methods we have that Pathname doesn't."
@@ -27,6 +35,8 @@ namespace :diff do
     end
   end
 end
+
+# ----------------------------------------------------------------------------
 
 namespace :missing do
   desc "List methods we are missing."
@@ -42,6 +52,8 @@ namespace :missing do
   end
 end
 
+# ----------------------------------------------------------------------------
+
 namespace :pathname do
   desc "List all of Pathnames methods."
   task :methods do
@@ -56,6 +68,8 @@ namespace :pathname do
     $stdout.puts
   end
 end
+
+# ----------------------------------------------------------------------------
 
 desc "List all of Pathutils methods."
 task :methods do

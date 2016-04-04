@@ -3,13 +3,27 @@ class Pathutil
     extend self
 
     # ------------------------------------------------------------------------
+
+    def allowed
+      return @allowed ||= begin
+        {
+          :yaml => {
+            :classes => [],
+            :symbols => []
+          }
+        }
+      end
+    end
+
+    # ------------------------------------------------------------------------
     # Wraps around YAML and SafeYAML to provide alternatives to Rubies.
     # Note: We default aliases to yes so we can detect if you explicit true.
     # ------------------------------------------------------------------------
 
-    def load_yaml(data, safe: true, whitelist_classes: [], whitelist_symbols: [], aliases: :yes)
-      require "yaml"
+    def load_yaml(data, safe: true, whitelist_classes: self.allowed[:yaml][:classes], \
+        whitelist_symbols: self.allowed[:yaml][:symbols], aliases: :yes)
 
+      require "yaml"
       unless safe
         return YAML.load(
           data

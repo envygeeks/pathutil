@@ -695,6 +695,10 @@ class Pathutil
 
   # --------------------------------------------------------------------------
 
+  rb_delegate :chmod,        :to => :File, :args => { :after => :@path }
+  rb_delegate :lchown,       :to => :File, :args => { :after => :@path }
+  rb_delegate :lchmod,       :to => :File, :args => { :after => :@path }
+  rb_delegate :chown,        :to => :File, :args => { :after => :@path }
   rb_delegate :basename,     :to => :File, :args => :@path, :wrap => true
   rb_delegate :dirname,      :to => :File, :args => :@path, :wrap => true
   rb_delegate :readlink,     :to => :File, :args => :@path, :wrap => true
@@ -706,21 +710,17 @@ class Pathutil
   rb_delegate :size,         :to => :File, :args => :@path
   rb_delegate :link,         :to => :File, :args => :@path
   rb_delegate :atime,        :to => :File, :args => :@path
-  rb_delegate :chown,        :to => :File, :args => :@path
   rb_delegate :ctime,        :to => :File, :args => :@path
   rb_delegate :lstat,        :to => :File, :args => :@path
   rb_delegate :utime,        :to => :File, :args => :@path
-  rb_delegate :lchmod,       :to => :File, :args => :@path
   rb_delegate :sysopen,      :to => :File, :args => :@path
   rb_delegate :birthtime,    :to => :File, :args => :@path
   rb_delegate :mountpoint?,  :to => :File, :args => :@path
   rb_delegate :truncate,     :to => :File, :args => :@path
   rb_delegate :symlink,      :to => :File, :args => :@path
   rb_delegate :extname,      :to => :File, :args => :@path
-  rb_delegate :lchown,       :to => :File, :args => :@path
   rb_delegate :zero?,        :to => :File, :args => :@path
   rb_delegate :ftype,        :to => :File, :args => :@path
-  rb_delegate :chmod,        :to => :File, :args => :@path
   rb_delegate :mtime,        :to => :File, :args => :@path
   rb_delegate :open,         :to => :File, :args => :@path
   rb_delegate :stat,         :to => :File, :args => :@path

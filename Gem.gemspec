@@ -21,5 +21,5 @@ Gem::Specification.new do |spec|
   spec.has_rdoc = false
   spec.bindir = "bin"
 
-  spec.add_runtime_dependency "forwardable-extended", "~> 2.5"
+  spec.add_runtime_dependency "forwardable-extended", "~> 2.6"
 end

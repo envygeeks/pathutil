@@ -238,7 +238,7 @@ class Pathutil
 
   def fnmatch?(matcher)
     matcher.is_a?(Regexp) ? !!(self =~ matcher) : \
-      File.fnmatch(self, matcher)
+      File.fnmatch(matcher, self)
   end
 
   # --------------------------------------------------------------------------

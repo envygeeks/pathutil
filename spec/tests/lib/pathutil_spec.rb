@@ -1007,6 +1007,33 @@ describe Pathutil do
 
       #
 
+      context "when asked to ignore files/folders" do
+        before do
+          name1.mkdir_p
+          name2.mkdir_p
+
+          name1.join(name2.basename).mkdir_p
+          name1.join(name2.basename, name1.basename).touch
+          name1.join(name1.basename).touch
+
+          name1.safe_copy(name2, {
+            :root => tmpdir1, :ignore => [
+              name1.join(name2.basename, name1.basename)
+            ]
+          })
+        end
+
+        #
+
+        it "should not copy those files" do
+          expect(name2.join(name2.basename, name1.basename)).not_to(
+            exist
+          )
+        end
+      end
+
+      #
+
       context "normal copying" do
         before do
           name1.mkdir_p

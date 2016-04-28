@@ -413,16 +413,17 @@ class Pathutil
   # --------------------------------------------------------------------------
   # Copy a directory, allowing symlinks if the link falls inside of the root.
   # This is indented for people who wish some safety to their copies.
+  # NOTE: Ignore is ignored on safe_copy file because it's explicit.
   # --------------------------------------------------------------------------
 
-  def safe_copy(to, root: nil)
+  def safe_copy(to, root: nil, ignore: [])
     raise ArgumentError, "must give a root" unless root
     root = self.class.new(root)
     to   = self.class.new(to)
 
     if directory?
       safe_copy_directory(to, {
-        :root => root
+        :root => root, :ignore => ignore
       })
 
     else
@@ -553,6 +554,14 @@ class Pathutil
   end
 
   # --------------------------------------------------------------------------
+
+  def to_regexp(guard: true)
+    Regexp.new((guard ? "\\A" : "") + Regexp.escape(
+      self
+    ))
+  end
+
+  # --------------------------------------------------------------------------
   # Expand the paths and return.
   # --------------------------------------------------------------------------
 
@@ -578,7 +587,9 @@ class Pathutil
   # --------------------------------------------------------------------------
 
   private
-  def safe_copy_directory(to, root: nil)
+  def safe_copy_directory(to, root: nil, ignore: [])
+    ignore = [ignore].flatten.uniq
+
     if !in_path?(root)
       raise Errno::EPERM, "#{self} not in #{
         root
@@ -587,21 +598,23 @@ class Pathutil
     else
       to.mkdir_p unless to.exist?
       children do |file|
-        if !file.in_path?(root)
-          raise Errno::EPERM, "#{file} not in #{
-            root
-          }"
+        unless ignore.any? { |path| file.in_path?(path) }
+          if !file.in_path?(root)
+            raise Errno::EPERM, "#{file} not in #{
+              root
+            }"
 
-        elsif file.file?
-          FileUtils.cp(file, to, {
-            :preserve => true
-          })
+          elsif file.file?
+            FileUtils.cp(file, to, {
+              :preserve => true
+            })
 
-        else
-          path = file.realpath
-          path.safe_copy(to.join(file.basename), {
-            :root => root
-          })
+          else
+            path = file.realpath
+            path.safe_copy(to.join(file.basename), {
+              :root => root, :ignore => ignore
+            })
+          end
         end
       end
     end
@@ -773,7 +786,6 @@ class Pathutil
   rb_delegate :opendir, :to => :Dir, :alias_of => :open
   rb_delegate :relative?, :to => :self, :alias_of => :absolute?, :bool => :reverse
   rb_delegate :regexp_escape, :to => :Regexp, :args => :@path, :alias_of => :escape
-  rb_delegate :to_regexp, :to => :Regexp, :args => :@path, :alias_of => :new
   rb_delegate :shellescape, :to => :Shellwords, :args => :@path
   rb_delegate :mkdir, :to => :Dir, :args => :@path
 

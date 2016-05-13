@@ -1,8 +1,6 @@
-# ----------------------------------------------------------------------------
 # Frozen-string-literal: true
 # Copyright: 2015-2016 Jordon Bedwell - MIT License
 # Encoding: utf-8
-# ----------------------------------------------------------------------------
 
 require "pathutil/helpers"
 require "forwardable/extended"
@@ -13,22 +11,24 @@ class Pathutil
   extend Forwardable::Extended
   extend Helpers
 
-  # --------------------------------------------------------------------------
-  # Note: A lot of this class can be compatible with Pathname.
-  # --------------------------------------------------------------------------
-
+  # --
+  # @note A lot of this class can be compatible with Pathname.
+  # Initialize a new instance.
+  # @return Pathutil
+  # --
   def initialize(path)
     return @path = path if path.is_a?(String)
     return @path = path.to_path if path.respond_to?(:to_path)
     return @path = path.to_s
   end
 
-  # --------------------------------------------------------------------------
-  # Note: It will return all results that it finds across all ascending paths.
-  # Example: Pathutil.new("~/").expand_path.search_backwards(".bashrc") => [#<Pathutil:/home/user/.bashrc>]
+  # --
+  # @yield Pathutil
+  # @note It will return all results that it finds across all ascending paths.
+  # @example Pathutil.new("~/").expand_path.search_backwards(".bashrc") => [#<Pathutil:/home/user/.bashrc>]
   # Search backwards for a file (like Rakefile, _config.yml, opts.yml).
-  # --------------------------------------------------------------------------
-
+  # @return Enum
+  # --
   def search_backwards(file, backwards: Float::INFINITY)
     ary = []
 
@@ -58,11 +58,11 @@ class Pathutil
     ary
   end
 
-  # --------------------------------------------------------------------------
-  # See: self.class.load_yaml as this a direct alias of that method.
+  # --
   # Read the file as a YAML file turning it into an object.
-  # --------------------------------------------------------------------------
-
+  # @see self.class.load_yaml as this a direct alias of that method.
+  # @return Hash
+  # --
   def read_yaml(throw_missing: false, **kwd)
     self.class.load_yaml(
       read, **kwd
@@ -74,11 +74,11 @@ class Pathutil
     )
   end
 
-  # --------------------------------------------------------------------------
-  # See: self.class.read_json as this is a direct alias of that method.
+  # --
   # Read the file as a JSON file turning it into an object.
-  # --------------------------------------------------------------------------
-
+  # @see self.class.read_json as this is a direct alias of that method.
+  # @return Hash
+  # --
   def read_json(throw_missing: false)
     JSON.parse(
       read
@@ -90,88 +90,89 @@ class Pathutil
     )
   end
 
-  # --------------------------------------------------------------------------
-  # Note: The blank part is intentionally left there so that you can rejoin.
+  # --
+  # @note The blank part is intentionally left there so that you can rejoin.
   # Splits the path into all parts so that you can do step by step comparisons
-  # Example: Pathutil.new("/my/path").split_path # => ["", "my", "path"]
-  # --------------------------------------------------------------------------
-
+  # @example Pathutil.new("/my/path").split_path # => ["", "my", "path"]
+  # @return Array<String>
+  # --
   def split_path
     @path.split(
       File::SEPARATOR
     )
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @see `String#==` for more details.
   # A stricter version of `==` that also makes sure the object matches.
-  # See: `String#==` for more details.
-  # --------------------------------------------------------------------------
-
+  # @return true|false
+  # --
   def ===(other)
     other.is_a?(self.class) && @path == other
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @example Pathutil.new("/hello") >= Pathutil.new("/") # => true
+  # @example Pathutil.new("/hello") >= Pathutil.new("/hello") # => true
   # Checks to see if a path falls within a path and deeper or is the other.
-  # Example: Pathutil.new("/hello") >= Pathutil.new("/hello") # => true
-  # Example: Pathutil.new("/hello") >= Pathutil.new("/") # => true
-  # --------------------------------------------------------------------------
-
+  # @return true|false
+  # --
   def >=(other)
     mine, other = expanded_paths(other)
     return true if other == mine
     mine.in_path?(other)
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @example Pathutil.new("/hello/world") > Pathutil.new("/hello") # => true
   # Strictly checks to see if a path is deeper but within the path of the other.
-  # Example: Pathutil.new("/hello/world") > Pathutil.new("/hello") # => true
-  # --------------------------------------------------------------------------
-
+  # @return true|false
+  # --
   def >(other)
     mine, other = expanded_paths(other)
     return false if other == mine
     mine.in_path?(other)
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @example Pathutil.new("/") < Pathutil.new("/hello") # => true
   # Strictly check to see if a path is behind other path but within it.
-  # Example: Pathutil.new("/") < Pathutil.new("/hello") # => true
-  # --------------------------------------------------------------------------
-
+  # @return true|false
+  # --
   def <(other)
     mine, other = expanded_paths(other)
     return false if other == mine
     other.in_path?(mine)
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # Check to see if a path is behind the other path but within it.
-  # Example: Pathutil.new("/hello") < Pathutil.new("/hello") # => true
-  # Example: Pathutil.new("/") < Pathutil.new("/hello") # => true
-  # --------------------------------------------------------------------------
-
+  # @example Pathutil.new("/hello") < Pathutil.new("/hello") # => true
+  # @example Pathutil.new("/") < Pathutil.new("/hello") # => true
+  # @return true|false
+  # --
   def <=(other)
     mine, other = expanded_paths(other)
     return true if other == mine
     other.in_path?(mine)
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @note "./" is considered relative.
   # Check to see if the path is absolute, as in: starts with "/"
-  # Note: "./" is considered relative.
-  # --------------------------------------------------------------------------
-
+  # @return true|false
+  # --
   def absolute?
     @path.start_with?("/")
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @yield Pathutil
   # Break apart the path and yield each with the previous parts.
-  # Example: Pathutil.new("/hello/world").ascend.to_a # => ["/", "/hello", "/hello/world"]
-  # Example: Pathutil.new("/hello/world").ascend { |path| $stdout.puts path }
-  # --------------------------------------------------------------------------
-
+  # @example Pathutil.new("/hello/world").ascend.to_a # => ["/", "/hello", "/hello/world"]
+  # @example Pathutil.new("/hello/world").ascend { |path| $stdout.puts path }
+  # @return Enum
+  # --
   def ascend
     unless block_given?
       return to_enum(
@@ -195,12 +196,13 @@ class Pathutil
     nil
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @yield Pathutil
   # Break apart the path in reverse order and descend into the path.
-  # Example: Pathutil.new("/hello/world").descend.to_a # => ["/hello/world", "/hello", "/"]
-  # Example: Pathutil.new("/hello/world").descend { |path| $stdout.puts path }
-  # --------------------------------------------------------------------------
-
+  # @example Pathutil.new("/hello/world").descend.to_a # => ["/hello/world", "/hello", "/"]
+  # @example Pathutil.new("/hello/world").descend { |path| $stdout.puts path }
+  # @return Enum
+  # --
   def descend
     unless block_given?
       return to_enum(
@@ -215,11 +217,12 @@ class Pathutil
     nil
   end
 
-  # --------------------------------------------------------------------------
-  # Example: Pathutil.new("/hello/world").each_line { |line| $stdout.puts line }
+  # --
+  # @yield Pathutil
+  # @example Pathutil.new("/hello/world").each_line { |line| $stdout.puts line }
   # Wraps `readlines` and allows you to yield on the result.
-  # --------------------------------------------------------------------------
-
+  # @return Enum
+  # --
   def each_line
     return to_enum(__method__) unless block_given?
     readlines.each do |line|
@@ -229,30 +232,30 @@ class Pathutil
     nil
   end
 
-  # --------------------------------------------------------------------------
-  # Example: Pathutil.new("/hello").fnmatch?("/hello") # => true
+  # --
+  # @example Pathutil.new("/hello").fnmatch?("/hello") # => true
   # Unlike traditional `fnmatch`, with this one `Regexp` is allowed.
-  # Example: Pathutil.new("/hello").fnmatch?(/h/) # => true
-  # See: `File#fnmatch` for more information.
-  # --------------------------------------------------------------------------
-
+  # @example Pathutil.new("/hello").fnmatch?(/h/) # => true
+  # @see `File#fnmatch` for more information.
+  # @return true|false
+  # --
   def fnmatch?(matcher)
     matcher.is_a?(Regexp) ? !!(self =~ matcher) : \
       File.fnmatch(matcher, self)
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # Allows you to quickly determine if the file is the root folder.
-  # --------------------------------------------------------------------------
-
+  # @return true|false
+  # --
   def root?
     self == File::SEPARATOR
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # Allows you to check if the current path is in the path you want.
-  # --------------------------------------------------------------------------
-
+  # @return true|false
+  # --
   def in_path?(path)
     path = self.class.new(path).expand_path.split_path
     mine = (symlink?? expand_path.realpath : expand_path).split_path
@@ -260,16 +263,17 @@ class Pathutil
     true
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   def inspect
     "#<#{self.class}:#{@path}>"
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @return Array<Pathutil>
   # Grab all of the children from the current directory, including hidden.
-  # --------------------------------------------------------------------------
-
+  # @yield Pathutil
+  # --
   def children
     ary = []
 
@@ -288,11 +292,12 @@ class Pathutil
     ary
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @yield Pathutil
   # Allows you to glob however you wish to glob in the current `Pathutil`
-  # See: `File::Constants` for a list of flags.
-  # --------------------------------------------------------------------------
-
+  # @see `File::Constants` for a list of flags.
+  # @return Enum
+  # --
   def glob(pattern, flags = 0)
     unless block_given?
       return to_enum(
@@ -311,11 +316,12 @@ class Pathutil
     nil
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @yield &block
   # Move to the current directory temporarily (or for good) and do work son.
-  # Note: you do not need to ship a block at all.
-  # --------------------------------------------------------------------------
-
+  # @note you do not need to ship a block at all.
+  # @return nil
+  # --
   def chdir
     if !block_given?
       Dir.chdir(
@@ -329,10 +335,11 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @yield Pathutil
   # Find all files without care and yield the given block.
-  # --------------------------------------------------------------------------
-
+  # @return Enum
+  # --
   def find
     return to_enum(__method__) unless block_given?
     Find.find @path do |val|
@@ -340,10 +347,11 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @yield Pathutil
   # Splits the path returning each part (filename) back to you.
-  # --------------------------------------------------------------------------
-
+  # @return Enum
+  # --
   def each_filename
     return to_enum(__method__) unless block_given?
     @path.split(File::SEPARATOR).delete_if(&:empty?).each do |file|
@@ -351,11 +359,11 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
-  # Note: This will simply return self if "/".
+  # --
   # Get the parent of the current path.
-  # --------------------------------------------------------------------------
-
+  # @note This will simply return self if "/".
+  # @return Pathutil
+  # --
   def parent
     return self if @path == "/"
     self.class.new(absolute?? File.dirname(@path) : File.join(
@@ -363,30 +371,31 @@ class Pathutil
     ))
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @yield Pathutil
   # Split the file into its dirname and basename, so you can do stuff.
-  # --------------------------------------------------------------------------
-
+  # @return nil
+  # --
   def split
     File.split(@path).collect! do |path|
       self.class.new(path)
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @note Your extension should start with "."
   # Replace a files extension with your given extension.
-  # Note: Your extension should start with "."
-  # --------------------------------------------------------------------------
-
+  # @return Pathutil
+  # --
   def sub_ext(ext)
     self.class.new(@path.chomp(File.extname(@path)) + ext)
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # A less complex version of `relative_path_from` that simply uses a
   # `Regexp` and returns the full path if it cannot be determined.
-  # --------------------------------------------------------------------------
-
+  # @return Pathutil
+  # --
   def relative_path_from(from)
     from = self.class.new(from).expand_path.gsub(%r!/$!, "")
     self.class.new(expand_path.gsub(%r!^#{
@@ -394,10 +403,10 @@ class Pathutil
     }/!, ""))
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # Expands the path and left joins the root to the path.
-  # --------------------------------------------------------------------------
-
+  # @return Pathutil
+  # --
   def enforce_root(root)
     curr, root = expanded_paths(root)
     if curr.in_path?(root)
@@ -410,12 +419,12 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # Copy a directory, allowing symlinks if the link falls inside of the root.
   # This is indented for people who wish some safety to their copies.
-  # NOTE: Ignore is ignored on safe_copy file because it's explicit.
-  # --------------------------------------------------------------------------
-
+  # @note Ignore is ignored on safe_copy file because it's explicit.
+  # @return nil
+  # --
   def safe_copy(to, root: nil, ignore: [])
     raise ArgumentError, "must give a root" unless root
     root = self.class.new(root)
@@ -433,31 +442,29 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
-  # See: `self.class.normalize` as this is an alias.
-  # --------------------------------------------------------------------------
-
+  # --
+  # @see `self.class.normalize` as this is an alias.
+  # --
   def normalize
     return @normalize ||= begin
       self.class.normalize
     end
   end
 
-  # --------------------------------------------------------------------------
-  # See: `self.class.encoding` as this is an alias.
-  # --------------------------------------------------------------------------
-
+  # --
+  # @see `self.class.encoding` as this is an alias.
+  # --
   def encoding
     return @encoding ||= begin
       self.class.encoding
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @note You can set the default encodings via the class.
   # Read took two steroid shots: it can normalize your string, and encode.
-  # Note: You can set the default encodings via the class.
-  # --------------------------------------------------------------------------
-
+  # @return String
+  # --
   def read(*args, **kwd)
     kwd[:encoding] ||= encoding
 
@@ -473,11 +480,11 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @note You can set the default encodings via the class.
   # Binread took two steroid shots: it can normalize your string, and encode.
-  # Note: You can set the default encodings via the class.
-  # --------------------------------------------------------------------------
-
+  # @return String
+  # --
   def binread(*args, **kwd)
     kwd[:encoding] ||= encoding
 
@@ -493,11 +500,11 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @note You can set the default encodings via the class.
   # Readlines took two steroid shots: it can normalize your string, and encode.
-  # Note: You can set the default encodings via the class.
-  # --------------------------------------------------------------------------
-
+  # @return Array<String>
+  # --
   def readlines(*args, **kwd)
     kwd[:encoding] ||= encoding
 
@@ -513,11 +520,11 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @note You can set the default encodings via the class.
   # Write took two steroid shots: it can normalize your string, and encode.
-  # Note: You can set the default encodings via the class.
-  # --------------------------------------------------------------------------
-
+  # @return Fixnum<Bytes>
+  # --
   def write(data, *args, **kwd)
     kwd[:encoding] ||= encoding
 
@@ -533,11 +540,11 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
+  # @note You can set the default encodings via the class.
   # Binwrite took two steroid shots: it can normalize your string, and encode.
-  # Note: You can set the default encodings via the class.
-  # --------------------------------------------------------------------------
-
+  # @return Fixnum<Bytes>
+  # --
   def binwrite(data, *args, **kwd)
     kwd[:encoding] ||= encoding
 
@@ -553,7 +560,7 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   def to_regexp(guard: true)
     Regexp.new((guard ? "\\A" : "") + Regexp.escape(
@@ -561,19 +568,17 @@ class Pathutil
     ))
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # Expand the paths and return.
-  # --------------------------------------------------------------------------
-
+  # --
   private
   def expanded_paths(path)
     return expand_path, self.class.new(path).expand_path
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # Safely copy a file.
-  # --------------------------------------------------------------------------
-
+  # --
   private
   def safe_copy_file(to, root: nil)
     raise Errno::EPERM, "#{self} not in #{root}" unless in_path?(root)
@@ -582,10 +587,9 @@ class Pathutil
     })
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # Safely copy a directory and it's sub-files.
-  # --------------------------------------------------------------------------
-
+  # --
   private
   def safe_copy_directory(to, root: nil, ignore: [])
     ignore = [ignore].flatten.uniq
@@ -623,11 +627,11 @@ class Pathutil
   class << self
     attr_writer :encoding
 
-    # ------------------------------------------------------------------------
+    # --
+    # @note We do nothing special here.
     # Get the current directory that Ruby knows about.
-    # Note: We do nothing special here.
-    # ------------------------------------------------------------------------
-
+    # @return Pathutil
+    # --
     def pwd
       new(
         Dir.pwd
@@ -637,23 +641,21 @@ class Pathutil
     alias gcwd pwd
     alias cwd  pwd
 
-    # ------------------------------------------------------------------------
-    # Note: you are encouraged to override this if you need to.
+    # --
+    # @note you are encouraged to override this if you need to.
     # Aliases the default system encoding to us so that we can do most read
     # and write operations with that encoding, instead of being crazy.
-    # ------------------------------------------------------------------------
-
+    # --
     def encoding
       return @encoding ||= begin
         Encoding.default_external
       end
     end
 
-    # ------------------------------------------------------------------------
+    # --
     # Normalize CRLF -> LF   on Windows reads, to ease  your troubles.
     # Normalize LF   -> CLRF on Windows write, to ease  your troubles.
-    # ------------------------------------------------------------------------
-
+    # --
     def normalize
       return @normalize ||= {
         :read  => Gem.win_platform?,
@@ -661,12 +663,12 @@ class Pathutil
       }
     end
 
-    # ------------------------------------------------------------------------
+    # --
     # Make a temporary directory.
-    # Note: if you adruptly exit it will not remove the dir.
-    # Note: this directory is removed on exit.
-    # ------------------------------------------------------------------------
-
+    # @note if you adruptly exit it will not remove the dir.
+    # @note this directory is removed on exit.
+    # @return Pathutil
+    # --
     def tmpdir(*args)
       rtn = new(make_tmpname(*args)).tap(&:mkdir)
       ObjectSpace.define_finalizer(rtn, proc do
@@ -676,12 +678,12 @@ class Pathutil
       rtn
     end
 
-    # ------------------------------------------------------------------------
+    # --
     # Make a temporary file.
-    # Note: if you adruptly exit it will not remove the dir.
-    # Note: this file is removed on exit.
-    # ------------------------------------------------------------------------
-
+    # @note if you adruptly exit it will not remove the dir.
+    # @note this file is removed on exit.
+    # @return Pathutil
+    # --
     def tmpfile(*args)
       rtn = new(make_tmpname(*args)).tap(&:touch)
       ObjectSpace.define_finalizer(rtn, proc do
@@ -692,7 +694,7 @@ class Pathutil
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   rb_delegate :sub,     :to => :@path, :wrap => true
   rb_delegate :chomp,   :to => :@path, :wrap => true
@@ -706,7 +708,7 @@ class Pathutil
   rb_delegate :"!~",    :to => :@path
   rb_delegate :<=>,     :to => :@path
 
-  # --------------------------------------------------------------------------
+  # --
 
   rb_delegate :chmod,        :to => :File, :args => { :after => :@path }
   rb_delegate :lchown,       :to => :File, :args => { :after => :@path }
@@ -738,7 +740,7 @@ class Pathutil
   rb_delegate :open,         :to => :File, :args => :@path
   rb_delegate :stat,         :to => :File, :args => :@path
 
-  # --------------------------------------------------------------------------
+  # --
 
   rb_delegate :pipe?,            :to => :FileTest, :args => :@path
   rb_delegate :file?,            :to => :FileTest, :args => :@path
@@ -763,7 +765,7 @@ class Pathutil
   rb_delegate :exist?,           :to => :FileTest, :args => :@path
   rb_delegate :size?,            :to => :FileTest, :args => :@path
 
-  # --------------------------------------------------------------------------
+  # --
 
   rb_delegate :rm_rf,   :to => :FileUtils, :args => :@path
   rb_delegate :rm_r,    :to => :FileUtils, :args => :@path
@@ -775,13 +777,13 @@ class Pathutil
   rb_delegate :mkpath,  :to => :FileUtils, :args => :@path
   rb_delegate :cp,      :to => :FileUtils, :args => :@path
 
-  # --------------------------------------------------------------------------
+  # --
 
   rb_delegate :each_child, :to => :children
   rb_delegate :each_entry, :to => :children
   rb_delegate :to_a,       :to => :children
 
-  # --------------------------------------------------------------------------
+  # --
 
   rb_delegate :opendir, :to => :Dir, :alias_of => :open
   rb_delegate :relative?, :to => :self, :alias_of => :absolute?, :bool => :reverse
@@ -789,7 +791,7 @@ class Pathutil
   rb_delegate :shellescape, :to => :Shellwords, :args => :@path
   rb_delegate :mkdir, :to => :Dir, :args => :@path
 
-  # --------------------------------------------------------------------------
+  # --
 
   alias + join
   alias delete rm

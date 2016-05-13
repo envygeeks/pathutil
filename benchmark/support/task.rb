@@ -1,8 +1,6 @@
-# ----------------------------------------------------------------------------
 # Frozen-string-literal: true
 # Copyright: 2015-2016 Jordon Bedwell - MIT License
 # Encoding: utf-8
-# ----------------------------------------------------------------------------
 
 class BenchmarkTask
   def initialize(name)
@@ -14,7 +12,7 @@ class BenchmarkTask
     setup_task
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   def setup_task
     Rake::Task.define_task(@name) do
@@ -30,13 +28,13 @@ class BenchmarkTask
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   def setup_desc
     Rake.application.last_description = "Run benchmark/* and grade your speed."
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   private
   def print_slower
@@ -50,13 +48,13 @@ class BenchmarkTask
     $stdout.puts
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   def print_faster
     $stdout.puts "Faster than: #{@faster.size}"
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   private
   def run(file)
@@ -81,7 +79,7 @@ class BenchmarkTask
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   private
   def reset_add!
@@ -90,7 +88,7 @@ class BenchmarkTask
     @lines = 1
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   private
   def command(*args)
@@ -106,7 +104,7 @@ class BenchmarkTask
     ]
   end
 
-  # --------------------------------------------------------------------------
+  # --
 
   private
   def arrange(array)

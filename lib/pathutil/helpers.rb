@@ -2,7 +2,7 @@ class Pathutil
   module Helpers
     extend self
 
-    # ------------------------------------------------------------------------
+    # --
 
     def allowed
       return @allowed ||= begin
@@ -15,11 +15,11 @@ class Pathutil
       end
     end
 
-    # ------------------------------------------------------------------------
+    # --
     # Wraps around YAML and SafeYAML to provide alternatives to Rubies.
-    # Note: We default aliases to yes so we can detect if you explicit true.
-    # ------------------------------------------------------------------------
-
+    # @note We default aliases to yes so we can detect if you explicit true.
+    # @return Hash
+    # --
     def load_yaml(data, safe: true, whitelist_classes: self.allowed[:yaml][:classes], \
         whitelist_symbols: self.allowed[:yaml][:symbols], aliases: :yes)
 
@@ -46,10 +46,10 @@ class Pathutil
       end
     end
 
-    # ------------------------------------------------------------------------
+    # --
     # Make a temporary name suitable for temporary files and directories.
-    # ------------------------------------------------------------------------
-
+    # @return String
+    # --
     def make_tmpname(prefix = "", suffix = nil, root = nil)
       prefix = tmpname_prefix(prefix)
       suffix = tmpname_suffix(suffix)
@@ -60,7 +60,7 @@ class Pathutil
       ))
     end
 
-    # ------------------------------------------------------------------------
+    # --
 
     private
     def tmpname_suffix(suffix)
@@ -69,11 +69,10 @@ class Pathutil
       suffix
     end
 
-    # ------------------------------------------------------------------------
+    # --
     # Cleanup the temp name prefix, joining if necessary.
     # rubocop:disable Style/ParallelAssignment
-    # ------------------------------------------------------------------------
-
+    # --
     private
     def tmpname_prefix(prefix)
       ext, prefix = prefix, "" if !prefix.is_a?(Array) && prefix.start_with?(".")
@@ -90,11 +89,10 @@ class Pathutil
       ]
     end
 
-    # ------------------------------------------------------------------------
+    # --
     # Wrap around, cleanup, deprecate and use SafeYAML.
     # rubocop:enable Style/ParallelAssignment
-    # ------------------------------------------------------------------------
-
+    # --
     private
     def setup_safe_yaml(whitelist_classes, aliases)
       warn "WARN: SafeYAML does not support disabling  of aliases." if aliases && aliases != :yes

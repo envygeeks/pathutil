@@ -413,9 +413,9 @@ class Pathutil
       return curr
 
     else
-      File.join(
+      Pathutil.new(File.join(
         root, curr
-      )
+      ))
     end
   end
 

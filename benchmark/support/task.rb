@@ -58,13 +58,15 @@ class BenchmarkTask
 
   private
   def run(file)
-    _, err, = command "bundle", "exec", "ruby", file
-    json = JSON.load(File.read("benchmark.json")).max_by do |val|
+    _, err, = command ENV["BUNDLE_BIN_PATH"], "exec", "ruby", file
+    abort err unless err.empty?
+
+    json = JSON.load(File.read("benchmark.json"))
+    .max_by do |val|
       val["ips"]
     end
 
     reset_add!
-    abort err unless err.empty?
     if json["name"] =~ /^B:/
       $stdout.print " ", Simple::Ansi.green("\u2714")
       @faster << json[

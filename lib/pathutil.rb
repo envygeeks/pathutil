@@ -23,6 +23,15 @@ class Pathutil
   end
 
   # --
+  # @see Pathname#cleanpath.
+  # @note This is a wholesale rip and cleanup of Pathname#cleanpath
+  # @return Pathutil
+  # --
+  def cleanpath(symlink = false)
+    symlink ? conservative_cleanpath : aggressive_cleanpath
+  end
+
+  # --
   # @yield Pathutil
   # @note It will return all results that it finds across all ascending paths.
   # @example Pathutil.new("~/").expand_path.search_backwards(".bashrc") => [#<Pathutil:/home/user/.bashrc>]
@@ -98,7 +107,7 @@ class Pathutil
   # --
   def split_path
     @path.split(
-      File::SEPARATOR
+      /\\+|\/+/.freeze
     )
   end
 
@@ -249,7 +258,7 @@ class Pathutil
   # @return true|false
   # --
   def root?
-    self == File::SEPARATOR
+    !!(self =~ /\A(?:[A-Za-z]:)?(?:\\+|\/+)\Z/)
   end
 
   # --
@@ -569,6 +578,57 @@ class Pathutil
   end
 
   # --
+  # @todo See if you can speed this up by removing the enum and switching
+  #   to something like start=true,false.
+  # --
+
+  def aggressive_cleanpath
+    return self.class.new("/") if root?
+
+    _out = split_path.each_with_object([]) do |part, out|
+      next if part == "." || (part == ".." && out.last == "")
+      if part == ".." && out.last && out.last != ".."
+        out.pop
+
+      else
+        out.push(
+          part
+        )
+      end
+    end
+
+    # --
+
+    return self.class.new("/") if _out == [""].freeze
+    return self.class.new(".") if _out.empty? && (end_with?(".") || relative?)
+    self.class.new(_out.join("/"))
+  end
+
+  # --
+
+  def conservative_cleanpath
+    _out = (path = split_path).to_enum.with_index(0).each_with_object([]) do |(part, i), out|
+      next if part == "." || (part == ".." && out.last == "")
+      out.push(
+        part
+      )
+    end
+
+    # --
+
+    if !_out.empty? && basename == "." && _out.last != "" && _out.last != ".."
+      _out << "."
+    end
+
+    # --
+
+    return self.class.new("/") if _out == [""].freeze
+    return self.class.new(".") if _out.empty? && (end_with?(".") || relative?)
+    return self.class.new(_out.join("/")).join("") if @path =~ /\/\z/ && _out.last != "." && _out.last != ".."
+    self.class.new(_out.join("/"))
+  end
+
+  # --
   # Expand the paths and return.
   # --
   private
@@ -696,17 +756,19 @@ class Pathutil
 
   # --
 
-  rb_delegate :sub,     :to => :@path, :wrap => true
-  rb_delegate :chomp,   :to => :@path, :wrap => true
-  rb_delegate :gsub,    :to => :@path, :wrap => true
-  rb_delegate :=~,      :to => :@path
-  rb_delegate :==,      :to => :@path
-  rb_delegate :to_s,    :to => :@path
-  rb_delegate :freeze,  :to => :@path
-  rb_delegate :frozen?, :to => :@path
-  rb_delegate :to_str,  :to => :@path
-  rb_delegate :"!~",    :to => :@path
-  rb_delegate :<=>,     :to => :@path
+  rb_delegate :sub,         :to => :@path, :wrap => true
+  rb_delegate :chomp,       :to => :@path, :wrap => true
+  rb_delegate :gsub,        :to => :@path, :wrap => true
+  rb_delegate :=~,          :to => :@path
+  rb_delegate :==,          :to => :@path
+  rb_delegate :to_s,        :to => :@path
+  rb_delegate :freeze,      :to => :@path
+  rb_delegate :end_with?,   :to => :@path
+  rb_delegate :start_with?, :to => :@path
+  rb_delegate :frozen?,     :to => :@path
+  rb_delegate :to_str,      :to => :@path
+  rb_delegate :"!~",        :to => :@path
+  rb_delegate :<=>,         :to => :@path
 
   # --
 
@@ -800,6 +862,8 @@ class Pathutil
   alias last basename
   alias entries children
   alias make_symlink symlink
+  alias cleanpath_conservative conservative_cleanpath
+  alias cleanpath_aggressive aggressive_cleanpath
   alias fnmatch fnmatch?
   alias make_link link
   alias first dirname

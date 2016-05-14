@@ -9,8 +9,6 @@ require "yaml"
 
 describe Pathutil do
   (Pathname.instance_methods - Object.instance_methods).each do |method|
-    next if method == :cleanpath
-
     it "should have #{method}" do
       expect(described_class).to have_method(
         method
@@ -1200,6 +1198,55 @@ describe Pathutil do
       expect(described_class.pwd).to eq(described_class.new(
         Dir.pwd
       ))
+    end
+  end
+
+  # --
+  # These tests are taken from: https://github.com/ruby/ruby/blob/trunk/test/pathname/test_pathname.rb
+  # The source that runs against these tests is reverse engineered since
+  # their source is mighty confusing...
+  # --
+
+  describe "#aggressive_cleanpath" do
+    tests = [['/', '/'], ['.', ''], ['.', '.'], ['..', '..'], ['a', 'a'], ['/', '/.'],
+      ['/', '/..'], ['/a', '/a'], ['.', './'], ['..', '../'], ['a', 'a/'], ['a/b', 'a//b'],
+      ['a', 'a/.'], ['a', 'a/./'], ['.', 'a/..'], ['.', 'a/../'], ['/a', '/a/.'], ['..', './..'],
+      ['..', '../.'], ['..', './../'], ['..', '.././'], ['/', '/./..'], ['/', '/../.'], ['/', '/./../'],
+      ['/', '/.././'], ['a/b/c', 'a/b/c'], ['b/c', './b/c'], ['a/c', 'a/./c'], ['a/b', 'a/b/.'],
+      ['.', 'a/../.'], ['/a', '/../.././../a'], ['../../d', 'a/b/../../../../c/../d'],
+      ['/', '///'], ['/a', '///a'], ['/', '///..'], ['/', '///.'],
+      ['/', '///a/../..'], ['c:/foo/bar', 'c:\\foo\\bar']]
+
+    tests.each do |(result, test)|
+      specify "(#{test}) => #{result}" do
+        expect(Pathutil.new(test).send(:aggressive_cleanpath).to_s).to eq(
+          result
+        )
+      end
+    end
+  end
+
+  # --
+  # These tests are taken from: https://github.com/ruby/ruby/blob/trunk/test/pathname/test_pathname.rb
+  # The source that runs against these tests is reverse engineered since
+  # their source is mighty confusing...
+  # --
+
+  describe "#conservative_cleanpath" do
+    tests = [['/', '/'], ['.', ''], ['.', '.'], ['..', '..'], ['a', 'a'], ['/', '/.'],
+      ['/', '/..'], ['/a', '/a'], ['.', './'], ['..', '../'], ['a/', 'a/'], ['a/b', 'a//b'],
+      ['a/.', 'a/.'], ['a/.', 'a/./'], ['a/..', 'a/../'], ['/a/.', '/a/.'], ['..', './..'], ['..', '../.'],
+      ['..', './../'], ['..', '.././'], ['/', '/./..'], ['/', '/../.'], ['/', '/./../'], ['/', '/.././'],
+      ['a/b/c', 'a/b/c'], ['b/c', './b/c'], ['a/c', 'a/./c'], ['a/b/.', 'a/b/.'], ['a/..', 'a/../.'],
+      ['c:/foo/bar', 'c:\\foo\\bar'], ['/a', '/../.././../a'], ['a/b/../../../../c/../d',
+          'a/b/../../../../c/../d']]
+
+    tests.each do |(result, test)|
+      specify "(#{test}) => #{result}" do
+        expect(Pathutil.new(test).send(:conservative_cleanpath).to_s).to eq(
+          result
+        )
+      end
     end
   end
 end

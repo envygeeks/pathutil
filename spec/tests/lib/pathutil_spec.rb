@@ -1223,6 +1223,14 @@ describe Pathutil do
           result
         )
       end
+
+      #
+
+      specify "(#{test}) matches Pathname" do
+        expect(Pathutil.new(test).send(:aggressive_cleanpath).to_s).to eq(
+          Pathutil.new(test).send(:aggressive_cleanpath).to_s
+        )
+      end
     end
   end
 
@@ -1245,6 +1253,14 @@ describe Pathutil do
       specify "(#{test}) => #{result}" do
         expect(Pathutil.new(test).send(:conservative_cleanpath).to_s).to eq(
           result
+        )
+      end
+
+      #
+
+      specify "(#{test}) matches Pathname" do
+        expect(Pathutil.new(test).send(:aggressive_cleanpath).to_s).to eq(
+          Pathutil.new(test).send(:aggressive_cleanpath).to_s
         )
       end
     end

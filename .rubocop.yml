@@ -4,8 +4,7 @@ Metrics/CyclomaticComplexity: { Max: 8 }
 Metrics/PerceivedComplexity: { Max: 8 }
 Metrics/ParameterLists: { Max: 8 }
 Metrics/ModuleLength: { Max: 1024 }
-Metrics/MethodLength: { Max: 12 }
-Metrics/MethodLength: { Max: 24 }
+Metrics/MethodLength: { Max: 36 }
 Metrics/BlockNesting: { Max: 4 }
 Metrics/AbcSize: { Max: 20 }
 
@@ -44,7 +43,9 @@ Style/MultilineTernaryOperator:       { Enabled: false }
 Style/EmptyLinesAroundModuleBody:     { Enabled: false }
 Style/FrozenStringLiteralComment:     { Enabled:  true }
 Style/SpaceInsideStringInterpolation: { Enabled: false }
+Style/CommentIndentation:             { Enabled: false }
 Style/EmptyLinesAroundAccessModifier: { Enabled: false }
+Lint/UnderscorePrefixedVariableName:  { Enabled: false }
 Style/BracesAroundHashParameters:     { Enabled: false }
 Style/EmptyLinesAroundClassBody:      { Enabled: false }
 Lint/UselessAccessModifier:           { Enabled: false }
@@ -60,3 +61,6 @@ Lint/UnusedMethodArgument:            { Enabled: false }
 
 AllCops:
   TargetRubyVersion: 2.0
+  Exclude:
+    - vendor/**/*
+    - benchmark/**/*

@@ -107,7 +107,7 @@ class Pathutil
   # --
   def split_path
     @path.split(
-      /\\+|\/+/.freeze
+      %r!\\+|/+!
     )
   end
 
@@ -258,7 +258,7 @@ class Pathutil
   # @return true|false
   # --
   def root?
-    !!(self =~ /\A(?:[A-Za-z]:)?(?:\\+|\/+)\Z/)
+    !!(self =~ %r!\A(?:[A-Za-z]:)?(?:\\+|/+)\z!)
   end
 
   # --
@@ -578,6 +578,10 @@ class Pathutil
   end
 
   # --
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
+  # --
 
   def aggressive_cleanpath
     return self.class.new("/") if root?
@@ -604,7 +608,7 @@ class Pathutil
   # --
 
   def conservative_cleanpath
-    _out = split_path.each_with_object([]) do |(part, i), out|
+    _out = split_path.each_with_object([]) do |part, out|
       next if part == "." || (part == ".." && out.last == "")
       out.push(
         part
@@ -621,11 +625,14 @@ class Pathutil
 
     return self.class.new("/") if _out == [""].freeze
     return self.class.new(".") if _out.empty? && (end_with?(".") || relative?)
-    return self.class.new(_out.join("/")).join("") if @path =~ /\/\z/ && _out.last != "." && _out.last != ".."
+    return self.class.new(_out.join("/")).join("") if @path =~ %r!/\z! && _out.last != "." && _out.last != ".."
     self.class.new(_out.join("/"))
   end
 
   # --
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
   # Expand the paths and return.
   # --
   private

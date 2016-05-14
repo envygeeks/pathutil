@@ -1208,6 +1208,7 @@ describe Pathutil do
   # --
 
   describe "#aggressive_cleanpath" do
+    # rubocop:disable Style/WordArray
     tests = [['/', '/'], ['.', ''], ['.', '.'], ['..', '..'], ['a', 'a'], ['/', '/.'],
       ['/', '/..'], ['/a', '/a'], ['.', './'], ['..', '../'], ['a', 'a/'], ['a/b', 'a//b'],
       ['a', 'a/.'], ['a', 'a/./'], ['.', 'a/..'], ['.', 'a/../'], ['/a', '/a/.'], ['..', './..'],
@@ -1216,6 +1217,7 @@ describe Pathutil do
       ['.', 'a/../.'], ['/a', '/../.././../a'], ['../../d', 'a/b/../../../../c/../d'],
       ['/', '///'], ['/a', '///a'], ['/', '///..'], ['/', '///.'],
       ['/', '///a/../..'], ['c:/foo/bar', 'c:\\foo\\bar']]
+      # rubocop:enable Style/WordArray
 
     tests.each do |(result, test)|
       specify "(#{test}) => #{result}" do
@@ -1241,13 +1243,15 @@ describe Pathutil do
   # --
 
   describe "#conservative_cleanpath" do
+    # rubocop:disable Style/WordArray
     tests = [['/', '/'], ['.', ''], ['.', '.'], ['..', '..'], ['a', 'a'], ['/', '/.'],
       ['/', '/..'], ['/a', '/a'], ['.', './'], ['..', '../'], ['a/', 'a/'], ['a/b', 'a//b'],
       ['a/.', 'a/.'], ['a/.', 'a/./'], ['a/..', 'a/../'], ['/a/.', '/a/.'], ['..', './..'], ['..', '../.'],
       ['..', './../'], ['..', '.././'], ['/', '/./..'], ['/', '/../.'], ['/', '/./../'], ['/', '/.././'],
       ['a/b/c', 'a/b/c'], ['b/c', './b/c'], ['a/c', 'a/./c'], ['a/b/.', 'a/b/.'], ['a/..', 'a/../.'],
-      ['c:/foo/bar', 'c:\\foo\\bar'], ['/a', '/../.././../a'], ['a/b/../../../../c/../d',
-          'a/b/../../../../c/../d']]
+      ['c:/foo/bar', 'c:\\foo\\bar'], ['/a', '/../.././../a'],
+      ['a/b/../../../../c/../d', 'a/b/../../../../c/../d']]
+      # rubocop:enable Style/WordArray
 
     tests.each do |(result, test)|
       specify "(#{test}) => #{result}" do

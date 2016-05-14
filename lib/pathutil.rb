@@ -604,7 +604,7 @@ class Pathutil
   # --
 
   def conservative_cleanpath
-    _out = (path = split_path).each_with_object([]) do |(part, i), out|
+    _out = split_path.each_with_object([]) do |(part, i), out|
       next if part == "." || (part == ".." && out.last == "")
       out.push(
         part

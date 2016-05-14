@@ -578,9 +578,6 @@ class Pathutil
   end
 
   # --
-  # @todo See if you can speed this up by removing the enum and switching
-  #   to something like start=true,false.
-  # --
 
   def aggressive_cleanpath
     return self.class.new("/") if root?
@@ -607,7 +604,7 @@ class Pathutil
   # --
 
   def conservative_cleanpath
-    _out = (path = split_path).to_enum.with_index(0).each_with_object([]) do |(part, i), out|
+    _out = (path = split_path).each_with_object([]) do |(part, i), out|
       next if part == "." || (part == ".." && out.last == "")
       out.push(
         part

@@ -20,8 +20,8 @@ class Pathutil
     # @note We default aliases to yes so we can detect if you explicit true.
     # @return Hash
     # --
-    def load_yaml(data, safe: true, whitelist_classes: self.allowed[:yaml][:classes], \
-        whitelist_symbols: self.allowed[:yaml][:symbols], aliases: :yes)
+    def load_yaml(data, safe: true, whitelist_classes: allowed[:yaml][:classes], \
+        whitelist_symbols: allowed[:yaml][:symbols], aliases: :yes)
 
       require "yaml"
       unless safe

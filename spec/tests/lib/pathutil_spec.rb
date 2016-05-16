@@ -72,6 +72,44 @@ describe Pathutil do
 
   #
 
+  describe "absolute" do
+    it "should make paths absolute with /" do
+      expect(described_class.new("hello/world").absolute).to eq(
+        "/hello/world"
+      )
+    end
+
+    #
+
+    context "when given a Windows root" do
+      it "should not add / in the front" do
+        expect(described_class.new("C:\\hello\\world").absolute).to eq(
+          "C:\\hello\\world"
+        )
+      end
+    end
+  end
+
+  #
+
+  describe "#relative" do
+    it "should make paths relative" do
+      expect(described_class.new("/hello/world").relative).to eq(
+        "hello/world"
+      )
+    end
+
+    #
+
+    it "should strip the Windows drive too!" do
+      expect(described_class.new("C:/hello/world").relative).to eq(
+        "hello/world"
+      )
+    end
+  end
+
+  #
+
   describe "#search_backwards" do
     let :path do
       file.rm_rf

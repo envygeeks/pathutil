@@ -625,7 +625,8 @@ class Pathutil
 
     return self.class.new("/") if _out == [""].freeze
     return self.class.new(".") if _out.empty? && (end_with?(".") || relative?)
-    return self.class.new(_out.join("/")).join("") if @path =~ %r!/\z! && _out.last != "." && _out.last != ".."
+    return self.class.new(_out.join("/")).join("") if @path =~ %r!/\z! \
+      && _out.last != "." && _out.last != ".."
     self.class.new(_out.join("/"))
   end
 

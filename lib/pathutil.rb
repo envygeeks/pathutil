@@ -441,15 +441,10 @@ class Pathutil
   # @return Pathutil
   # --
   def enforce_root(root)
-    curr, root = expanded_paths(root)
-    if curr.in_path?(root)
-      return curr
-
-    else
-      Pathutil.new(File.join(
-        root, curr
-      ))
-    end
+    return self if in_path?(root)
+    self.class.new(root).join(
+      self
+    )
   end
 
   # --

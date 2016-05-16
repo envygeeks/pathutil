@@ -898,6 +898,7 @@ class Pathutil
   alias make_symlink symlink
   alias cleanpath_conservative conservative_cleanpath
   alias cleanpath_aggressive aggressive_cleanpath
+  alias prepend enforce_root
   alias fnmatch fnmatch?
   alias make_link link
   alias first dirname

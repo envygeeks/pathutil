@@ -441,7 +441,7 @@ class Pathutil
   # @return Pathutil
   # --
   def enforce_root(root)
-    return self if in_path?(root)
+    return self if !relative? && in_path?(root)
     self.class.new(root).join(
       self
     )

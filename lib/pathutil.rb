@@ -790,6 +790,11 @@ class Pathutil
 
   # --
 
+  rb_delegate :gcwd, :to => :"self.class"
+  rb_delegate :pwd,  :to => :"self.class"
+
+  # --
+
   rb_delegate :sub,         :to => :@path, :wrap => true
   rb_delegate :chomp,       :to => :@path, :wrap => true
   rb_delegate :gsub,        :to => :@path, :wrap => true

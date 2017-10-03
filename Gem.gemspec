@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.files = %W(Rakefile Gemfile LICENSE) + Dir["{lib,bin}/**/*"]
   spec.description = "Like Pathname but a little less insane."
   spec.summary = "Almost like Pathname but just a little less insane."
-  spec.homepage = "http://github.com/envygeeks/pathutils"
+  spec.homepage = "http://github.com/envygeeks/pathutil"
   spec.email = ["jordon@envygeeks.io"]
   spec.require_paths = ["lib"]
   spec.name = "pathutil"

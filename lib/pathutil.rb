@@ -817,6 +817,7 @@ class Pathutil
   rb_delegate :realpath,     :to => :File, :args => :@path, :wrap => true
   rb_delegate :rename,       :to => :File, :args => :@path, :wrap => true
   rb_delegate :join,         :to => :File, :args => :@path, :wrap => true
+  rb_delegate :empty?,       :to => :file, :args => :@path
   rb_delegate :size,         :to => :File, :args => :@path
   rb_delegate :link,         :to => :File, :args => :@path
   rb_delegate :atime,        :to => :File, :args => :@path

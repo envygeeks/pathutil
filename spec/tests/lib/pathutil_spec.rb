@@ -1,8 +1,6 @@
-# ----------------------------------------------------------------------------
 # Frozen-string-literal: true
 # Copyright: 2015-2016 Jordon Bedwell - MIT License
 # Encoding: utf-8
-# ----------------------------------------------------------------------------
 
 require "rspec/helper"
 require "yaml"
@@ -231,10 +229,10 @@ describe Pathutil do
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # rubocop:disable Lint/UselessComparison
   # rubocop:disable Style/CaseEquality
-  # --------------------------------------------------------------------------
+  # --
 
   describe "#===" do
     it "should match itself" do
@@ -260,9 +258,9 @@ describe Pathutil do
     end
   end
 
-  # --------------------------------------------------------------------------
+  # --
   # rubocop:enable Style/CaseEquality
-  # --------------------------------------------------------------------------
+  # --
 
   describe "#==" do
     it "should match strings" do
@@ -1170,10 +1168,10 @@ describe Pathutil do
             end
           end
 
-          # ------------------------------------------------------------------
+          # --
           # rubocop:disable Style/MultilineMethodCallIndentation
           # rubocop:disable Style/FirstParameterIndentation
-          # ------------------------------------------------------------------
+          # --
 
           context "when embedded deeply" do
             before do

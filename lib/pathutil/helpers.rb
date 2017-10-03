@@ -1,3 +1,7 @@
+# Frozen-string-literal: true
+# Copyright: 2015-2016 Jordon Bedwell - MIT License
+# Encoding: utf-8
+
 class Pathutil
   module Helpers
     extend self
@@ -61,7 +65,6 @@ class Pathutil
     end
 
     # --
-
     private
     def tmpname_suffix(suffix)
       suffix = suffix.join("-") if suffix.is_a?(Array)

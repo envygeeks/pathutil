@@ -25,7 +25,6 @@ class Pathutil
   # --
   # Make a path relative.
   # --
-
   def relative
     return self if relative?
     self.class.new(strip_windows_drive.gsub(
@@ -36,7 +35,6 @@ class Pathutil
   # --
   # Make a path absolute
   # --
-
   def absolute
     return self if absolute?
     self.class.new("/").join(
@@ -297,7 +295,6 @@ class Pathutil
   end
 
   # --
-
   def inspect
     "#<#{self.class}:#{@path}>"
   end
@@ -589,7 +586,6 @@ class Pathutil
   end
 
   # --
-
   def to_regexp(guard: true)
     Regexp.new((guard ? "\\A" : "") + Regexp.escape(
       self
@@ -599,7 +595,6 @@ class Pathutil
   # --
   # Strips the windows drive from the path.
   # --
-
   def strip_windows_drive(path = @path)
     self.class.new(path.gsub(
       %r!\A[A-Za-z]:(?:\\+|/+)!, ""
@@ -635,7 +630,6 @@ class Pathutil
   end
 
   # --
-
   def conservative_cleanpath
     _out = split_path.each_with_object([]) do |part, out|
       next if part == "." || (part == ".." && out.last == "")

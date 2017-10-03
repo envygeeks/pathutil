@@ -1,6 +1,0 @@
-engines:
-  rubocop: { enabled: true  }
-  fixme:   { enabled: false }
-ratings:
-  paths:
-    - "lib/**.rb"

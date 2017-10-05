@@ -7,9 +7,9 @@ gem "rake", :require => false
 gemspec
 
 group :test do
-  gem "luna-rspec-formatters", :require => false
-  gem "codeclimate-test-reporter", :require => false
   gem "safe_yaml", :require => false
+  gem "luna-rspec-formatters", :require => false
+  gem "simplecov", :require => false
 end
 
 group :development do

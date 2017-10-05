@@ -1,14 +1,14 @@
+<p align=center>
+  <a href=https://goo.gl/BhrgjW>
+    <img src=https://envygeeks.io/badges/paypal-large_1.png alt=Donate>
+  </a>
+  <br>
+  <a href=https://travis-ci.org/envygeeks/pathutil>
+    <img src="https://travis-ci.org/envygeeks/pathutil.svg?branch=master">
+  </a>
+</div>
+
 # Pathutil
-
-[![Build Status](https://travis-ci.org/envygeeks/pathutil.svg?branch=master)][travis]
-[![Test Coverage](https://codeclimate.com/github/envygeeks/pathutil/badges/coverage.svg)][coverage]
-[![Code Climate](https://codeclimate.com/github/envygeeks/pathutil/badges/gpa.svg)][codeclimate]
-[![Dependency Status](https://gemnasium.com/envygeeks/pathutil.svg)][gemnasium]
-
-[gemnasium]: https://gemnasium.com/envygeeks/pathutil
-[codeclimate]: https://codeclimate.com/github/envygeeks/pathutil
-[coverage]: https://codeclimate.com/github/envygeeks/pathutil/coverage
-[travis]: https://travis-ci.org/envygeeks/pathutil
 
 Pathutil tries to be a faster pure Ruby impelementation of Pathname.  It
 arose out of a need to fix basic problems with Pathname, such as suscepetibility

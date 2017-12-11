@@ -792,6 +792,7 @@ class Pathutil
   rb_delegate :sub,         :to => :@path, :wrap => true
   rb_delegate :chomp,       :to => :@path, :wrap => true
   rb_delegate :gsub,        :to => :@path, :wrap => true
+  rb_delegate :[],          :to => :@path
   rb_delegate :=~,          :to => :@path
   rb_delegate :==,          :to => :@path
   rb_delegate :to_s,        :to => :@path

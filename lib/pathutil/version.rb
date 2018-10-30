@@ -3,5 +3,5 @@
 # Encoding: utf-8
 
 class Pathutil
-  VERSION = "0.16.1"
+  VERSION = "0.16.2"
 end

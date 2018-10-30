@@ -59,9 +59,27 @@ class Pathutil
       suffix = tmpname_suffix(suffix)
 
       root ||= Dir::Tmpname.tmpdir
-      File.join(root, Dir::Tmpname.make_tmpname(
+      File.join(root, __make_tmpname(
         prefix, suffix
       ))
+    end
+
+    # --
+    private
+    def __make_tmpname((prefix, suffix), number)
+      prefix &&= String.try_convert(prefix) || tmpname_agerr(:prefix, prefix)
+      suffix &&= String.try_convert(suffix) || tmpname_agerr(:suffix, suffix)
+
+      time = Time.now.strftime("%Y%m%d")
+      path = "#{prefix}#{time}-#{$$}-#{rand(0x100000000).to_s(36)}".dup
+      path << "-#{number}" if number
+      path << suffix if suffix
+      path
+    end
+
+    private
+    def tmpname_agerr(type, val)
+      raise ArgumentError, "unexpected #{type}: #{val.inspect}"
     end
 
     # --

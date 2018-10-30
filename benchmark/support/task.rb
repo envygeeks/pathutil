@@ -17,7 +17,7 @@ class BenchmarkTask
   def setup_task
     Rake::Task.define_task(@name) do
       $stdout.puts "Running benchmark files in benchmark/*.rb", ""
-      Dir[File.join(File.expand_path("benchmark"), "*.rb")].each do |file|
+      Dir[File.expand_path(File.join(__dir__, "../*.rb"))].each do |file|
         run file
       end
 
@@ -58,7 +58,9 @@ class BenchmarkTask
 
   private
   def run(file)
-    _, err, = command ENV["BUNDLE_BIN_PATH"], "exec", "ruby", file
+    bundler = ENV.key?("BUNDLE_BIN_PATH")
+    _, err, = command "ruby", file unless bundler
+    _, err, = command ENV["BUNDLE_BIN_PATH"], "exec", "ruby", file if bundler
     abort err unless err.empty?
 
     json = JSON.load(File.read("benchmark.json"))

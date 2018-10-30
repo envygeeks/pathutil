@@ -1,27 +1,16 @@
 ---
-sudo: false
 cache: bundler
-os: linux
 rvm:
-  - &ruby1 2.1.8
-  - &ruby2 2.2.4
-  - &ruby3 2.3.0
-  - &jruby-previous jruby-9.0.4.0
-  - &jruby jruby-9.0.5.0
+  - &ruby1 2.4
+  - &ruby2 2.5
 env:
   - ""
   - BENCHMARK=true
 matrix:
   allow_failures:
     - env: BENCHMARK=true
-    - rvm: *jruby-previous
-    - rvm: *jruby
-
   exclude:
     - { env: BENCHMARK=true, rvm: *ruby1 }
-    - { env: BENCHMARK=true, rvm: *jruby }
-    - { env: BENCHMARK=true, rvm: *jruby-previous }
-    - { env: BENCHMARK=true, rvm: *ruby2 }
 
 notifications:
   email:

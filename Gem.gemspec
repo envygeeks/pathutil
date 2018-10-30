@@ -16,7 +16,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.name = "pathutil"
   spec.license = "MIT"
-  spec.has_rdoc = false
   spec.bindir = "bin"
 
   spec.add_runtime_dependency "forwardable-extended", "~> 2.6"

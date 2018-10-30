@@ -1,11 +1,10 @@
-require "bundler/setup"
-
 require "open3"
 require "rspec/core/rake_task"
 require_relative "../../benchmark/support/task"
 require "rubocop/rake_task"
 require "simple/ansi"
 require "pathutil"
+require "pathname"
 require "json"
 
 # --

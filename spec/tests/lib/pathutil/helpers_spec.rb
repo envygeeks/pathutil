@@ -76,9 +76,7 @@ describe Pathutil::Helpers do
           #
 
           after do
-            described_class.load_yaml("hello: world", {
-              :aliases => true
-            })
+            described_class.load_yaml("hello: world", aliases: true)
           end
         end
 

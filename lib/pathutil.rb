@@ -456,14 +456,10 @@ class Pathutil
     to   = self.class.new(to)
 
     if directory?
-      safe_copy_directory(to, {
-        :root => root, :ignore => ignore
-      })
+      safe_copy_directory(to, root: root, ignore: ignore)
 
     else
-      safe_copy_file(to, {
-        :root => root
-      })
+      safe_copy_file(to, root: root)
     end
   end
 
@@ -494,14 +490,10 @@ class Pathutil
     kwd[:encoding] ||= encoding
 
     if normalize[:read]
-      File.read(self, *args, kwd).encode({
-        :universal_newline => true
-      })
+      File.read(self, *args, **kwd).encode(universal_newline: true)
 
     else
-      File.read(
-        self, *args, kwd
-      )
+      File.read(self, *args, **kwd)
     end
   end
 
@@ -534,13 +526,13 @@ class Pathutil
     kwd[:encoding] ||= encoding
 
     if normalize[:read]
-      File.readlines(self, *args, kwd).encode({
+      File.readlines(self, *args, **kwd).encode({
         :universal_newline => true
       })
 
     else
       File.readlines(
-        self, *args, kwd
+        self, *args, **kwd
       )
     end
   end
@@ -556,11 +548,11 @@ class Pathutil
     if normalize[:write]
       File.write(self, data.encode(
         :crlf_newline => true
-      ), *args, kwd)
+      ), *args, **kwd)
 
     else
       File.write(
-        self, data, *args, kwd
+        self, data, *args, **kwd
       )
     end
   end
@@ -670,9 +662,7 @@ class Pathutil
   private
   def safe_copy_file(to, root: nil)
     raise Errno::EPERM, "#{self} not in #{root}" unless in_path?(root)
-    FileUtils.cp(self, to, {
-      :preserve => true
-    })
+    FileUtils.cp(self, to, preserve: true)
   end
 
   # --
@@ -697,15 +687,11 @@ class Pathutil
             }"
 
           elsif file.file?
-            FileUtils.cp(file, to, {
-              :preserve => true
-            })
+            FileUtils.cp(file, to, preserve: true)
 
           else
             path = file.realpath
-            path.safe_copy(to.join(file.basename), {
-              :root => root, :ignore => ignore
-            })
+            path.safe_copy(to.join(file.basename), root: root, ignore: ignore)
           end
         end
       end

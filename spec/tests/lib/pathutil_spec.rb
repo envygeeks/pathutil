@@ -944,9 +944,7 @@ describe Pathutil do
 
     context "with an encoding argument" do
       before do
-        file.write("hello", {
-          :encoding => "ASCII"
-        })
+        file.write("hello", encoding: "ASCII")
       end
 
       #
@@ -1050,11 +1048,10 @@ describe Pathutil do
           name1.join(name2.basename, name1.basename).touch
           name1.join(name1.basename).touch
 
-          name1.safe_copy(name2, {
-            :root => tmpdir1, :ignore => [
+          name1.safe_copy(name2, root: tmpdir1, ignore: [
               name1.join(name2.basename, name1.basename)
             ]
-          })
+          )
         end
 
         #
@@ -1077,9 +1074,7 @@ describe Pathutil do
           name1.join(name2.basename, name1.basename).touch
           name1.join(name1.basename).touch
 
-          name1.safe_copy(name2, {
-            :root => tmpdir1
-          })
+          name1.safe_copy(name2, root: tmpdir1)
         end
 
         #

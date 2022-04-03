@@ -20,7 +20,7 @@ class Pathutil
     end
 
     # --
-    # Wraps around YAML and SafeYAML to provide alternatives to Rubies.
+    # Wraps around YAMLto provide alternatives to Rubies.
     # @note We default aliases to yes so we can detect if you explicit true.
     # @return Hash
     # --
@@ -34,20 +34,12 @@ class Pathutil
         )
       end
 
-      if !YAML.respond_to?(:safe_load)
-        setup_safe_yaml whitelist_classes, aliases
-        SafeYAML.load(
-          data
-        )
-
-      else
-        YAML.safe_load(
-          data,
-          whitelist_classes,
-          whitelist_symbols,
-          aliases
-        )
-      end
+      YAML.safe_load(
+        data,
+        permitted_classes: whitelist_classes,
+        permitted_symbols: whitelist_symbols,
+        aliases: aliases
+      )
     end
 
     # --
@@ -108,22 +100,6 @@ class Pathutil
       return [
         prefix, ext || ""
       ]
-    end
-
-    # --
-    # Wrap around, cleanup, deprecate and use SafeYAML.
-    # rubocop:enable Style/ParallelAssignment
-    # --
-    private
-    def setup_safe_yaml(whitelist_classes, aliases)
-      warn "WARN: SafeYAML does not support disabling  of aliases." if aliases && aliases != :yes
-      warn "WARN: SafeYAML will be removed when Ruby 2.0 goes EOL."
-      require "safe_yaml/load"
-
-      SafeYAML.restore_defaults!
-      whitelist_classes.map(&SafeYAML.method(
-        :whitelist_class!
-      ))
     end
   end
 end

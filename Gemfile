@@ -7,7 +7,6 @@ gem "rake", :require => false
 gemspec
 
 group :test do
-  gem "safe_yaml", :require => false
   gem "luna-rspec-formatters", :require => false
   gem "simplecov", :require => false
 end

@@ -35,61 +35,6 @@ describe Pathutil::Helpers do
           Psych::DisallowedClass
         )
       end
-
-      #
-
-      context "when using SafeYAML" do
-        before do
-          allow(YAML).to receive(:respond_to?).with(:safe_load).and_return(false)
-          expect_any_instance_of(described_class).to receive(:warn).and_return(
-            nil
-          )
-        end
-
-        #
-
-        context do
-          it "should warn it's deprecated" do
-            expect(described_class).to receive(:warn).and_return(
-              nil
-            )
-          end
-
-          #
-
-          after do
-            described_class.load_yaml(
-              ":hello: :world"
-            )
-          end
-        end
-
-        #
-
-        context "when trying to disable aliases" do
-          it "should warn that you cannot disable them in SafeYAML" do
-            expect(described_class).to receive(:warn).exactly(2).times.and_return(
-              nil
-            )
-          end
-
-          #
-
-          after do
-            described_class.load_yaml("hello: world", {
-              :aliases => true
-            })
-          end
-        end
-
-        #
-
-        it "should parse with SafeYAML" do
-          expect(described_class.load_yaml(":hello: :world")).to eq({
-            ":hello" => ":world"
-          })
-        end
-      end
     end
 
     #

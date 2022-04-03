@@ -26,7 +26,7 @@ but only if they originate from the given root.
 - `>=`, `>` - Check if a file is in but ahead of a path: `Pathutil.new("/tmp/hello") > "/tmp" # => true`
 - `in_path?` - Check if a file is within a given path: `Pathutil.new("/tmp/hello").in_path?("/tmp") # => true`
 - `<=`, `<` - Check if a file is in but below a path: `Pathutil.new("/tmp") < "/tmp/hello" # => true`
-- `read_yaml` - a wrapper around `Yaml.safe_load` and `SafeYAML` to make reading `YAML` easy.
+- `read_yaml` - a wrapper around `Yaml.safe_load` to make reading `YAML` easy.
 - `children` - behaves like Pathname, except it accepts a block to work on the path.
 - `safe_copy` - Copy files, disallowing symlinks unless `in_path?`
 - `enforce_root` - Force a root if not already in that root.

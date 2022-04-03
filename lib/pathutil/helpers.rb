@@ -43,9 +43,9 @@ class Pathutil
       else
         YAML.safe_load(
           data,
-          whitelist_classes,
-          whitelist_symbols,
-          aliases
+          permitted_classes: whitelist_classes,
+          permitted_symbols: whitelist_symbols,
+          aliases: aliases
         )
       end
     end
